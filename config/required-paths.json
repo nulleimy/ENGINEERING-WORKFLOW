@@ -1,5 +1,6 @@
 {
   "required_paths": [
+    ".editorconfig",
     "README.md",
     "VERSION",
     "CHANGELOG.md",
@@ -46,6 +47,7 @@
     "assurance/assurance-level-targets.json",
     "assurance/control-framework-mapping.json",
     "evidence/evidence-catalog.json",
+    "evidence/open-source-enforcement-evidence.json",
     "readiness/READINESS_SCORE_MODEL.md",
     "readiness/domain-scorecard.json",
     "readiness/gap-register.json",
