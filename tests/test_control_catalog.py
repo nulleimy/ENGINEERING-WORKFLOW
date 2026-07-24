@@ -19,9 +19,17 @@ class ControlCatalogTest(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
         self.assertIn("CONTROL_VALIDATION=PASSED", result.stdout)
-        self.assertIn("CONTROLS=14", result.stdout)
+        self.assertIn("CONTROLS=15", result.stdout)
         self.assertIn("PROFILES=5", result.stdout)
+        self.assertIn("ASSURANCE_LEVELS=5", result.stdout)
         self.assertIn("OPEN_SOURCE_COMPONENTS=12", result.stdout)
+
+    def test_world_class_assurance_policy_exists(self) -> None:
+        policy = ROOT / "governance/WORLD_CLASS_ASSURANCE_POLICY.md"
+        self.assertTrue(policy.is_file())
+        text = policy.read_text(encoding="utf-8")
+        self.assertIn("highest applicable assurance profile", text.lower())
+        self.assertIn("downgrade", text.lower())
 
 
 if __name__ == "__main__":
