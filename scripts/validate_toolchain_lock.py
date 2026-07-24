@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+from pathlib import PurePosixPath
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,7 +21,15 @@ ALLOWED_CLASSES = {
     "standard-and-sdk",
     "developer-portal",
 }
+ALLOWED_ARCHIVE_TYPES = {"raw", "deb", "tar.gz"}
 PROHIBITED_FLOATING = {"latest", "main", "master", "unlocked", "not-selected", "profile-specific"}
+
+
+def safe_binary_path(value: object) -> bool:
+    if not isinstance(value, str) or not value:
+        return False
+    path = PurePosixPath(value)
+    return not path.is_absolute() and all(part not in {"", ".", ".."} for part in path.parts)
 
 
 def main() -> int:
@@ -88,18 +97,23 @@ def main() -> int:
                     continue
                 url = str(artifact.get("url", ""))
                 digest = str(artifact.get("sha256", ""))
+                archive_type = artifact.get("archive_type", "raw")
                 if not url.startswith("https://"):
                     errors.append(f"{tool_id}/{platform}: artifact URL must use HTTPS")
                 if "/latest/" in url or url.endswith("/latest"):
                     errors.append(f"{tool_id}/{platform}: floating latest URL is prohibited")
                 if not SHA256.fullmatch(digest):
                     errors.append(f"{tool_id}/{platform}: invalid SHA-256 digest")
+                if archive_type not in ALLOWED_ARCHIVE_TYPES:
+                    errors.append(f"{tool_id}/{platform}: unsupported archive_type {archive_type!r}")
+                if archive_type != "raw" and not safe_binary_path(artifact.get("binary_path")):
+                    errors.append(f"{tool_id}/{platform}: archived artifact requires a safe binary_path")
 
         if state in {"selected", "evaluate", "deferred"} and not tool.get("activation_requirement"):
             errors.append(f"{tool_id}: non-active tool requires an activation requirement")
 
     active_ids = {tool.get("id") for tool in tools if tool.get("state") == "active"}
-    for required in {"opa", "openssf-scorecard-action"}:
+    for required in {"opa", "openssf-scorecard-action", "syft", "grype"}:
         if required not in active_ids:
             errors.append(f"required active enforcement tool missing: {required}")
 
