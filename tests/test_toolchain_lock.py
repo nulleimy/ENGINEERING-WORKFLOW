@@ -21,9 +21,12 @@ class ToolchainLockTest(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
         self.assertIn("TOOLCHAIN_VALIDATION=PASSED", result.stdout)
-        self.assertIn("TOOLS=10", result.stdout)
-        self.assertIn("ACTIVE=2", result.stdout)
+        self.assertIn("TOOLS=15", result.stdout)
+        self.assertIn("ACTIVE=8", result.stdout)
+        self.assertIn("CONFIGURED=1", result.stdout)
         self.assertIn("SELECTED=4", result.stdout)
+        self.assertIn("EVALUATE=1", result.stdout)
+        self.assertIn("DEFERRED=1", result.stdout)
         self.assertIn("UNVERIFIED_EXECUTION_ALLOWED=false", result.stdout)
 
     def test_policy_input_builder_is_deterministic_json(self) -> None:
