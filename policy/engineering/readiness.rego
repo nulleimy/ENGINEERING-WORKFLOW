@@ -3,10 +3,10 @@ package engineering.readiness
 import rego.v1
 
 maturity_caps := {
-	"DESIGNED":               5.0,
-	"IMPLEMENTED":            7.0,
-	"VERIFIED":               8.5,
-	"MEASURED":               9.5,
+	"DESIGNED": 5.0,
+	"IMPLEMENTED": 7.0,
+	"VERIFIED": 8.5,
+	"MEASURED": 9.5,
 	"INDEPENDENTLY_REVIEWED": 10.0,
 }
 
