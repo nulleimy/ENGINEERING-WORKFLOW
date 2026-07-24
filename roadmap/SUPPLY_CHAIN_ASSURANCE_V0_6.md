@@ -1,5 +1,5 @@
 ---
-id: EW-RM-006
+id: EW-RM-007
 title: Supply-Chain Assurance v0.6 Closure Plan
 status: proposed
 owner: Security and Release Authorities
