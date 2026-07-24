@@ -1,0 +1,147 @@
+name: supply-chain
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supply-chain-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+
+      - name: Validate supply-chain policy
+        run: python3 scripts/validate_supply_chain.py
+
+      - name: Build deterministic reference artifact
+        run: python3 scripts/build_reference_artifact.py
+
+      - name: Generate CycloneDX SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0, Syft explicitly pinned below
+        with:
+          path: .
+          format: cyclonedx-json
+          output-file: dist/sbom.cdx.json
+          upload-artifact: false
+          upload-release-assets: false
+          dependency-snapshot: false
+          syft-version: v1.44.0
+
+      - name: Scan SBOM with blocking vulnerability policy
+        id: grype
+        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
+        with:
+          sbom: dist/sbom.cdx.json
+          fail-build: true
+          severity-cutoff: high
+          only-fixed: false
+          output-format: json
+          grype-version: v0.112.0
+
+      - name: Preserve scanner report
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${{ steps.grype.outputs.json }}"
+          cp "${{ steps.grype.outputs.json }}" dist/grype.json
+
+      - name: Independently validate artifact, SBOM and vulnerability report
+        run: >-
+          python3 scripts/validate_supply_chain.py
+          --artifact dist/engineering-workflow.tar.gz
+          --manifest dist/SHA256SUMS
+          --sbom dist/sbom.cdx.json
+          --report dist/grype.json
+
+      - name: Build portable evidence record
+        run: >-
+          python3 scripts/build_supply_chain_evidence.py
+          --artifact dist/engineering-workflow.tar.gz
+          --manifest dist/SHA256SUMS
+          --sbom dist/sbom.cdx.json
+          --report dist/grype.json
+          --output dist/supply-chain-evidence.json
+
+      - name: Upload immutable evidence input bundle
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: supply-chain-evidence-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+
+  attest-sign-verify:
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+    needs: build-scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    # Policy invariant: pull_request_signing_allowed=false
+    steps:
+      - name: Download exact evidence input bundle
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: supply-chain-evidence-${{ github.sha }}
+          path: dist
+
+      - name: Install integrity-verified Cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2 / Cosign 3.0.6
+
+      - name: Create signed build provenance attestation
+        uses: actions/attest@f7c74d28b9d84cb8768d0b8ca14a4bac6ef463e6 # v4
+        with:
+          subject-path: dist/engineering-workflow.tar.gz
+
+      - name: Create signed SBOM attestation
+        uses: actions/attest@f7c74d28b9d84cb8768d0b8ca14a4bac6ef463e6 # v4
+        with:
+          subject-path: dist/engineering-workflow.tar.gz
+          sbom-path: dist/sbom.cdx.json
+
+      - name: Keyless-sign artifact with Sigstore bundle
+        run: >-
+          cosign sign-blob --yes
+          --bundle dist/engineering-workflow.sigstore.json
+          dist/engineering-workflow.tar.gz
+
+      - name: Verify signature identity and issuer
+        shell: bash
+        run: |
+          set -euo pipefail
+          cosign verify-blob \
+            --bundle dist/engineering-workflow.sigstore.json \
+            --certificate-identity-regexp "^https://github.com/${GITHUB_REPOSITORY}/.github/workflows/supply-chain.yml@refs/(heads/main|tags/.+)$" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+            dist/engineering-workflow.tar.gz
+
+      - name: Upload signed evidence bundle
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: supply-chain-attested-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 90
