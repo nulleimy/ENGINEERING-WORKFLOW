@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "0.5.0-rc.1",
+  "version": "0.6.0-rc.1",
   "policy": {
     "floating_versions_allowed": false,
     "unverified_binary_execution_allowed": false,
@@ -21,15 +21,18 @@
       "artifacts": {
         "linux-amd64": {
           "url": "https://github.com/open-policy-agent/opa/releases/download/v1.17.0/opa_linux_amd64",
-          "sha256": "5485f9c32548af84bc0bfa06a7f40a98ecc742477a7f9f24ea3556d221dc295f"
+          "sha256": "5485f9c32548af84bc0bfa06a7f40a98ecc742477a7f9f24ea3556d221dc295f",
+          "archive_type": "raw"
         },
         "darwin-arm64": {
           "url": "https://github.com/open-policy-agent/opa/releases/download/v1.17.0/opa_darwin_arm64",
-          "sha256": "48360aaa595e5bb2ae412355519f99e57360413552bb2b8786e9968a227fa009"
+          "sha256": "48360aaa595e5bb2ae412355519f99e57360413552bb2b8786e9968a227fa009",
+          "archive_type": "raw"
         },
         "darwin-amd64": {
           "url": "https://github.com/open-policy-agent/opa/releases/download/v1.17.0/opa_darwin_amd64",
-          "sha256": "088f6c9d8c7b0e2ee0bee450cba7599953e3167649f3623019bada67a26229a4"
+          "sha256": "088f6c9d8c7b0e2ee0bee450cba7599953e3167649f3623019bada67a26229a4",
+          "archive_type": "raw"
         }
       }
     },
@@ -57,21 +60,61 @@
       "id": "syft",
       "name": "Syft",
       "tool_class": "binary",
-      "version": "1.44.0",
+      "version": "1.49.0",
       "license": "Apache-2.0",
-      "state": "selected",
+      "state": "active",
       "source": "https://github.com/anchore/syft",
-      "activation_requirement": "verify signed checksum manifest; generate CycloneDX 1.7 and SPDX interoperability evidence"
+      "release": "https://github.com/anchore/syft/releases/tag/v1.49.0",
+      "artifacts": {
+        "linux-amd64": {
+          "url": "https://github.com/anchore/syft/releases/download/v1.49.0/syft_1.49.0_linux_amd64.deb",
+          "sha256": "e5d18a436ce6ecb618b2feade242dcfed9bdbdfc4f8868a645ce619c07f5e58d",
+          "archive_type": "deb",
+          "binary_path": "usr/bin/syft"
+        },
+        "darwin-arm64": {
+          "url": "https://github.com/anchore/syft/releases/download/v1.49.0/syft_1.49.0_darwin_arm64.tar.gz",
+          "sha256": "4d137302fb3e049cb1b124b1cbd840a77280dc9f50a45a5a4389250a2228b3cb",
+          "archive_type": "tar.gz",
+          "binary_path": "syft"
+        },
+        "darwin-amd64": {
+          "url": "https://github.com/anchore/syft/releases/download/v1.49.0/syft_1.49.0_darwin_amd64.tar.gz",
+          "sha256": "a18ba5c48a4e75d0d87cae7b36b93bdfc04ddd5ea69b87bec9f7cd9431a8cdb9",
+          "archive_type": "tar.gz",
+          "binary_path": "syft"
+        }
+      }
     },
     {
       "id": "grype",
       "name": "Grype",
       "tool_class": "binary",
-      "version": "0.112.0",
+      "version": "0.116.0",
       "license": "Apache-2.0",
-      "state": "selected",
+      "state": "active",
       "source": "https://github.com/anchore/grype",
-      "activation_requirement": "verify signed checksum manifest; pin vulnerability database policy; define VEX and exception semantics"
+      "release": "https://github.com/anchore/grype/releases/tag/v0.116.0",
+      "artifacts": {
+        "linux-amd64": {
+          "url": "https://github.com/anchore/grype/releases/download/v0.116.0/grype_0.116.0_linux_amd64.deb",
+          "sha256": "f8d05c1d28e68fce0ec9b8c216fbe34b80f4eb4cdedb73e5d27b464d55db1c9f",
+          "archive_type": "deb",
+          "binary_path": "usr/bin/grype"
+        },
+        "darwin-arm64": {
+          "url": "https://github.com/anchore/grype/releases/download/v0.116.0/grype_0.116.0_darwin_arm64.tar.gz",
+          "sha256": "9425c225d0d63d2b384baf2177d3aba713a2bfb800235848ce70169e78c9c5fa",
+          "archive_type": "tar.gz",
+          "binary_path": "grype"
+        },
+        "darwin-amd64": {
+          "url": "https://github.com/anchore/grype/releases/download/v0.116.0/grype_0.116.0_darwin_amd64.tar.gz",
+          "sha256": "92dc64f7f1c71f92f610b250d801837c75a3c7336cb44656e59c4f1a07939163",
+          "archive_type": "tar.gz",
+          "binary_path": "grype"
+        }
+      }
     },
     {
       "id": "cosign",
@@ -81,7 +124,7 @@
       "license": "Apache-2.0",
       "state": "selected",
       "source": "https://github.com/sigstore/cosign",
-      "activation_requirement": "verify installer/action immutable ref; implement keyless signing, bundle verification and identity policy"
+      "activation_requirement": "verify release bundle; implement keyless signing, bundle verification and identity policy"
     },
     {
       "id": "renovate",
