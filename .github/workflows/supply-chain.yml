@@ -1,0 +1,138 @@
+name: supply-chain
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supply-chain-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SYFT_CHECK_FOR_APP_UPDATE: "false"
+      GRYPE_CHECK_FOR_APP_UPDATE: "false"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+
+      - name: Validate locked toolchain and supply-chain policy
+        run: |
+          python3 scripts/validate_toolchain_lock.py
+          python3 scripts/validate_supply_chain_policy.py
+
+      - name: Bootstrap checksum-verified Syft and Grype
+        run: |
+          python3 scripts/bootstrap_verified_tool.py syft --platform linux-amd64 --output .tools/syft
+          python3 scripts/bootstrap_verified_tool.py grype --platform linux-amd64 --output .tools/grype
+          .tools/syft version
+          .tools/grype version
+
+      - name: Build deterministic source artifact
+        run: |
+          python3 scripts/build_source_artifact.py \
+            --root . \
+            --output .evidence/source.tar.gz \
+            --manifest .evidence/source-manifest.json \
+            --baseline "$GITHUB_SHA"
+
+      - name: Generate Syft, CycloneDX and SPDX SBOMs
+        run: |
+          .tools/syft scan dir:. \
+            --exclude './.git/**' \
+            --exclude './.tools/**' \
+            --exclude './.evidence/**' \
+            --exclude './**/__pycache__/**' \
+            --exclude './.pytest_cache/**' \
+            -o syft-json=.evidence/sbom.syft.json \
+            -o cyclonedx-json=.evidence/sbom.cyclonedx.json \
+            -o spdx-json=.evidence/sbom.spdx.json
+
+      - name: Capture Grype database status
+        id: database
+        shell: bash
+        run: |
+          set +e
+          .tools/grype db update >.evidence/grype-db-update.stdout 2>.evidence/grype-db-update.stderr
+          update_status=$?
+          .tools/grype db status -o json >.evidence/grype-db-status.json 2>.evidence/grype-db-status.stderr
+          status_status=$?
+          set -e
+          database_status=0
+          if (( update_status != 0 || status_status != 0 )); then
+            database_status=1
+          fi
+          if [[ ! -s .evidence/grype-db-status.json ]]; then
+            printf '{"error":"grype database status unavailable","update_exit_code":%s,"status_exit_code":%s}\n' \
+              "$update_status" "$status_status" >.evidence/grype-db-status.json
+          fi
+          echo "exit_code=$database_status" >> "$GITHUB_OUTPUT"
+
+      - name: Evaluate vulnerability threshold
+        id: scan
+        shell: bash
+        run: |
+          set +e
+          .tools/grype sbom:.evidence/sbom.syft.json \
+            -o json \
+            --file .evidence/vulnerabilities.json \
+            --fail-on high
+          scan_status=$?
+          set -e
+          if [[ ! -s .evidence/vulnerabilities.json ]]; then
+            printf '{"error":"grype did not produce a vulnerability report","exit_code":%s}\n' \
+              "$scan_status" >.evidence/vulnerabilities.json
+          fi
+          echo "exit_code=$scan_status" >> "$GITHUB_OUTPUT"
+
+      - name: Build hashed evidence bundle
+        if: always()
+        run: |
+          python3 scripts/build_supply_chain_evidence.py \
+            --directory .evidence \
+            --scan-exit-code "${{ steps.scan.outputs.exit_code || '99' }}" \
+            --database-exit-code "${{ steps.database.outputs.exit_code || '99' }}" \
+            --baseline "$GITHUB_SHA" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT"
+
+      - name: Upload supply-chain evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: supply-chain-evidence-${{ github.sha }}
+          path: .evidence
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce supply-chain result
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('.evidence/scan-status.json')
+          if not path.is_file():
+              raise SystemExit('TOOL_FAILED: scan-status.json is missing')
+          status = json.loads(path.read_text(encoding='utf-8'))
+          result = status.get('result')
+          print(f'SUPPLY_CHAIN_RESULT={result}')
+          if result != 'PASSED':
+              raise SystemExit(f'{result}: supply-chain gate did not pass')
+          PY
