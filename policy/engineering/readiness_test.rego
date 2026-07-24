@@ -38,7 +38,8 @@ base_input := {
 }
 
 test_gap_closure_state_is_valid if {
-	count(readiness.deny with input as base_input) == 0
+	violations := readiness.deny with input as base_input
+	count(violations) == 0
 }
 
 test_false_world_class_claim_is_denied if {
