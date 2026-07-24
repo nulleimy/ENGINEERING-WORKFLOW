@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "version": "0.6.0-rc.1",
+  "artifact": {
+    "format": "tar.gz",
+    "deterministic": true,
+    "digest": "sha256",
+    "manifest_required": true
+  },
+  "sbom": {
+    "canonical_format": "cyclonedx-json",
+    "generator": "syft",
+    "generator_version": "1.44.0",
+    "spdx_interoperability_target": true
+  },
+  "vulnerability": {
+    "scanner": "grype",
+    "scanner_version": "0.112.0",
+    "blocking_severities": ["critical", "high", "unknown"],
+    "ignore_unfixed": false,
+    "database_failure_mode": "blocked",
+    "vex": {
+      "accepted_statuses": ["not_affected", "fixed"],
+      "required_fields": ["product", "vulnerability", "status", "justification", "owner", "evidence", "timestamp", "review_or_expiry"],
+      "independent_acceptance_required": true,
+      "ai_may_accept": false
+    }
+  },
+  "authority": {
+    "pull_request_signing_allowed": false,
+    "attestation_refs": ["refs/heads/main", "refs/tags/*"],
+    "oidc_issuer": "https://token.actions.githubusercontent.com",
+    "workflow_identity": ".github/workflows/supply-chain.yml"
+  },
+  "retention": {
+    "pull_request_evidence_days": 30,
+    "release_evidence": "release-lifetime-plus-5-years"
+  }
+}
