@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "id": "EW-EV-SUPPLY-CHAIN-V0.6",
+  "version": "0.6.0-rc.1",
+  "status": "IMPLEMENTED_AWAITING_CI",
+  "scope": "reference artifact packaging, CycloneDX SBOM, vulnerability gate, provenance, keyless signing and verification workflows",
+  "implemented": [
+    "deterministic archive builder",
+    "SHA-256 manifest",
+    "CycloneDX SBOM generation",
+    "high/critical/unknown vulnerability blocking",
+    "native report validation",
+    "portable evidence record",
+    "OIDC-gated build and SBOM attestations",
+    "Cosign keyless signing and identity verification"
+  ],
+  "not_claimed": [
+    "SLSA level",
+    "world-class readiness",
+    "certification",
+    "production release",
+    "GAP-009 closure"
+  ],
+  "required_closure_evidence": [
+    "successful quality workflow",
+    "successful OPA policy workflow",
+    "successful PR supply-chain build and scan",
+    "successful main/tag attestation and signature verification",
+    "independent review"
+  ]
+}
