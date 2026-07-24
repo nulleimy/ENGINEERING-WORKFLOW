@@ -12,6 +12,15 @@ CONTROL_ID = re.compile(r"^EW-[A-Z]+-[0-9]{3}$")
 FULL_SHA = re.compile(r"^[a-f0-9]{40}$")
 ACTION = re.compile(r"^\s*-\s+uses:\s*([^\s#]+)", re.MULTILINE)
 RISKS = {"R0", "R1", "R2", "R3"}
+ASSURANCE_LEVELS = {
+    "A1-professional-foundation",
+    "A2-controlled-engineering",
+    "A3-high-assurance-product",
+    "A4-production-assurance",
+    "A5-critical-trust",
+}
+ANTI_DOWNGRADE_CONTROL = "EW-GOV-002"
+SELECTION_POLICY = "highest-applicable-assurance; downgrade-by-convenience-prohibited"
 
 
 def load(path: str) -> object:
@@ -34,23 +43,47 @@ def main() -> int:
             errors.append(f"invalid control ID: {control_id!r}")
         if item.get("minimum_risk") not in RISKS:
             errors.append(f"{control_id}: invalid minimum_risk")
-        if item.get("requirement") not in {"MUST", "SHOULD", "MAY"}:
-            errors.append(f"{control_id}: invalid requirement")
+        if item.get("requirement") != "MUST":
+            errors.append(f"{control_id}: control catalog accepts only MUST requirements")
+
+    anti_downgrade = next((item for item in controls if item.get("id") == ANTI_DOWNGRADE_CONTROL), None)
+    if anti_downgrade is None:
+        errors.append(f"missing mandatory control: {ANTI_DOWNGRADE_CONTROL}")
+    elif anti_downgrade.get("exception_allowed") is not False:
+        errors.append(f"{ANTI_DOWNGRADE_CONTROL}: anti-downgrade control must be non-exceptable")
 
     profiles = load("profiles/catalog.json")
     profile_items = profiles.get("profiles", []) if isinstance(profiles, dict) else []
+    if not isinstance(profiles, dict) or profiles.get("selection_policy") != SELECTION_POLICY:
+        errors.append("profiles catalog does not enforce highest-applicable assurance selection")
     known = set(ids)
     profile_ids: list[str] = []
+    assurance_levels: list[str] = []
     for profile in profile_items:
         profile_id = profile.get("id")
         profile_ids.append(profile_id)
+        assurance_level = profile.get("assurance_level")
+        assurance_levels.append(assurance_level)
+        if assurance_level not in ASSURANCE_LEVELS:
+            errors.append(f"{profile_id}: invalid assurance_level")
         if profile.get("maximum_risk") not in RISKS:
             errors.append(f"{profile_id}: invalid maximum_risk")
-        unknown = sorted(set(profile.get("required_controls", [])) - known)
+        required = set(profile.get("required_controls", []))
+        unknown = sorted(required - known)
         if unknown:
             errors.append(f"{profile_id}: unknown controls: {', '.join(unknown)}")
+        if ANTI_DOWNGRADE_CONTROL not in required:
+            errors.append(f"{profile_id}: missing mandatory anti-downgrade control")
+        if "profile-downgrade-to-avoid-controls" not in set(profile.get("prohibited", [])):
+            errors.append(f"{profile_id}: profile downgrade prohibition is missing")
     if len(profile_ids) != len(set(profile_ids)):
         errors.append("profile IDs are not unique")
+    if len(assurance_levels) != len(set(assurance_levels)):
+        errors.append("assurance levels are not unique across profiles")
+
+    assurance_policy = ROOT / "governance/WORLD_CLASS_ASSURANCE_POLICY.md"
+    if not assurance_policy.is_file():
+        errors.append("missing world-class assurance policy")
 
     components = load("config/open-source-components.json")
     component_items = components.get("components", []) if isinstance(components, dict) else []
@@ -82,6 +115,7 @@ def main() -> int:
     print("CONTROL_VALIDATION=PASSED")
     print(f"CONTROLS={len(controls)}")
     print(f"PROFILES={len(profile_items)}")
+    print(f"ASSURANCE_LEVELS={len(assurance_levels)}")
     print(f"OPEN_SOURCE_COMPONENTS={len(component_items)}")
     print(f"PINNED_ACTIONS={action_count}")
     return 0
