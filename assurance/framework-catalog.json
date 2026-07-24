@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "catalog_version": "0.3.0-rc.1",
+  "frameworks": [
+    {
+      "id": "nist-ssdf-1.1",
+      "name": "NIST Secure Software Development Framework",
+      "version": "1.1",
+      "publication": "NIST SP 800-218",
+      "status": "final",
+      "authority": "NIST",
+      "source": "https://csrc.nist.gov/pubs/sp/800/218/final",
+      "normative_use": true
+    },
+    {
+      "id": "nist-ssdf-ai-800-218a",
+      "name": "Secure Software Development Practices for Generative AI and Dual-Use Foundation Models",
+      "version": "2024",
+      "publication": "NIST SP 800-218A",
+      "status": "final",
+      "authority": "NIST",
+      "source": "https://csrc.nist.gov/pubs/sp/800/218/a/final",
+      "normative_use": true,
+      "applicability": "AI model or AI-system development"
+    },
+    {
+      "id": "nist-ssdf-1.2-draft",
+      "name": "NIST Secure Software Development Framework",
+      "version": "1.2 draft",
+      "publication": "NIST SP 800-218 Rev. 1 IPD",
+      "status": "draft",
+      "authority": "NIST",
+      "source": "https://csrc.nist.gov/Projects/ssdf/publications",
+      "normative_use": false,
+      "usage": "tracking and migration preparation only"
+    },
+    {
+      "id": "slsa-1.2",
+      "name": "Supply-chain Levels for Software Artifacts",
+      "version": "1.2",
+      "status": "approved",
+      "authority": "SLSA community / Linux Foundation",
+      "source": "https://slsa.dev/spec/v1.2/",
+      "normative_use": true,
+      "tracks": ["source", "build"]
+    },
+    {
+      "id": "owasp-asvs-5.0.0",
+      "name": "OWASP Application Security Verification Standard",
+      "version": "5.0.0",
+      "status": "stable",
+      "authority": "OWASP Foundation",
+      "source": "https://owasp.org/www-project-application-security-verification-standard/",
+      "normative_use": true,
+      "applicability": "web applications, APIs and relied-upon application security controls"
+    },
+    {
+      "id": "openssf-osps-2026.02.19",
+      "name": "Open Source Project Security Baseline",
+      "version": "2026.02.19",
+      "status": "current",
+      "authority": "OpenSSF Security Baseline SIG",
+      "source": "https://baseline.openssf.org/versions/2026-02-19.html",
+      "normative_use": true,
+      "applicability": "public open-source projects"
+    }
+  ]
+}

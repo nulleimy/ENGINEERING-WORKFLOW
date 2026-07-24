@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "version": "0.3.0-rc.1",
+  "mapping_semantics": {
+    "direct": "the EW control implements substantially the same outcome",
+    "supporting": "the EW control supplies part of the framework outcome or evidence",
+    "contextual": "the reference informs implementation but is not equivalent"
+  },
+  "certification_disclaimer": "Mappings are traceability aids and do not constitute certification, conformance or audit attestation.",
+  "mappings": [
+    {
+      "control_id": "EW-GOV-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["PO.1","PO.2"],"relationship":"direct"},
+        {"framework_id":"openssf-osps-2026.02.19","references":["Governance","Access Control"],"relationship":"supporting"},
+        {"framework_id":"slsa-1.2","references":["Source Track: authoritative source and immutable revision identity"],"relationship":"supporting"}
+      ],
+      "evidence": ["EV-PROJECT-RECORD","EV-AUTHORITY-RECORD"]
+    },
+    {
+      "control_id": "EW-GOV-002",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["SSDF Use: risk-based prioritization and tailoring"],"relationship":"direct"},
+        {"framework_id":"openssf-osps-2026.02.19","references":["maturity-level applicability"],"relationship":"contextual"}
+      ],
+      "evidence": ["EV-ASSURANCE-PROFILE","EV-APPLICABILITY-REVIEW"]
+    },
+    {
+      "control_id": "EW-PROD-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["PO.1"],"relationship":"supporting"}
+      ],
+      "evidence": ["EV-WORK-PACKAGE","EV-ACCEPTANCE-CRITERIA"]
+    },
+    {
+      "control_id": "EW-ARCH-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["PW.1","PW.2"],"relationship":"direct"},
+        {"framework_id":"owasp-asvs-5.0.0","references":["architecture, threat modeling and security verification requirements applicable to the system"],"relationship":"supporting"},
+        {"framework_id":"nist-ssdf-ai-800-218a","references":["AI-specific design, data, model and system risk practices when applicable"],"relationship":"contextual"}
+      ],
+      "evidence": ["EV-ARCHITECTURE-RECORD","EV-THREAT-MODEL","EV-ADR"]
+    },
+    {
+      "control_id": "EW-DEL-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["PO.4","PW.7","PW.8"],"relationship":"supporting"},
+        {"framework_id":"slsa-1.2","references":["Source Track: revision history and review provenance"],"relationship":"supporting"}
+      ],
+      "evidence": ["EV-WORK-PACKAGE","EV-CHANGE-SET","EV-REVIEW-RECORD"]
+    },
+    {
+      "control_id": "EW-QUAL-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["PO.4","PW.7","PW.8","RV.1"],"relationship":"direct"},
+        {"framework_id":"owasp-asvs-5.0.0","references":["versioned applicable verification requirements"],"relationship":"direct"},
+        {"framework_id":"openssf-osps-2026.02.19","references":["Quality","Security Assessment"],"relationship":"supporting"}
+      ],
+      "evidence": ["EV-VERIFICATION-RECORD","EV-TEST-RESULTS","EV-QUALITY-GATE"]
+    },
+    {
+      "control_id": "EW-SEC-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["PO.5","PS.1","PW.1","PW.5","PW.9"],"relationship":"direct"},
+        {"framework_id":"owasp-asvs-5.0.0","references":["all applicable application-security requirements with version-qualified IDs"],"relationship":"direct"},
+        {"framework_id":"openssf-osps-2026.02.19","references":["Access Control","Security Assessment","Vulnerability Management"],"relationship":"supporting"}
+      ],
+      "evidence": ["EV-THREAT-MODEL","EV-SECRET-SCAN","EV-SECURITY-TEST","EV-RISK-ACCEPTANCE"]
+    },
+    {
+      "control_id": "EW-SUP-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["PO.3","PS.2","PS.3","PW.4","PW.6"],"relationship":"direct"},
+        {"framework_id":"slsa-1.2","references":["Source Track","Build Track","provenance and verification summary attestations"],"relationship":"direct"},
+        {"framework_id":"openssf-osps-2026.02.19","references":["Build and Release","Legal","Vulnerability Management"],"relationship":"direct"}
+      ],
+      "evidence": ["EV-DEPENDENCY-INVENTORY","EV-SBOM","EV-PROVENANCE","EV-LICENSE-REVIEW","EV-ARTIFACT-DIGEST"]
+    },
+    {
+      "control_id": "EW-PLAT-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["PO.3","PO.5","PW.6"],"relationship":"direct"},
+        {"framework_id":"slsa-1.2","references":["Build L1-L3 build-platform requirements"],"relationship":"direct"}
+      ],
+      "evidence": ["EV-ENVIRONMENT-RECORD","EV-REPRODUCTION-RESULT","EV-BUILD-PLATFORM-ASSESSMENT"]
+    },
+    {
+      "control_id": "EW-REL-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["PS.2","PS.3"],"relationship":"direct"},
+        {"framework_id":"slsa-1.2","references":["Build provenance","artifact verification","Source VSA where applicable"],"relationship":"direct"},
+        {"framework_id":"openssf-osps-2026.02.19","references":["Build and Release"],"relationship":"direct"}
+      ],
+      "evidence": ["EV-RELEASE-RECORD","EV-ARTIFACT-DIGEST","EV-PROVENANCE","EV-RECOVERY-RESULT"]
+    },
+    {
+      "control_id": "EW-OPS-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["RV.1","RV.2","RV.3"],"relationship":"supporting"},
+        {"framework_id":"owasp-asvs-5.0.0","references":["logging, error handling and operationally relied-upon controls"],"relationship":"supporting"}
+      ],
+      "evidence": ["EV-SERVICE-RECORD","EV-SLO-RECORD","EV-OBSERVABILITY-CHECK","EV-RESTORE-TEST"]
+    },
+    {
+      "control_id": "EW-DOC-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["PO.1","PO.2","PO.4"],"relationship":"supporting"},
+        {"framework_id":"openssf-osps-2026.02.19","references":["Documentation","Governance","Legal"],"relationship":"direct"}
+      ],
+      "evidence": ["EV-DOCUMENTATION-VALIDATION","EV-METADATA-RECORD","EV-FRESHNESS-REVIEW"]
+    },
+    {
+      "control_id": "EW-AI-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-ai-800-218a","references":["AI-specific SSDF community-profile practices and tasks"],"relationship":"direct"},
+        {"framework_id":"nist-ssdf-1.1","references":["PO.3","PO.4","PW.1","PW.7","PW.8","RV.1"],"relationship":"supporting"}
+      ],
+      "evidence": ["EV-AI-CONTEXT-RECORD","EV-AI-EXECUTION-RECORD","EV-AI-EVALUATION","EV-HUMAN-ACCEPTANCE"]
+    },
+    {
+      "control_id": "EW-COMP-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["outcome-based implementation and evidence mapping"],"relationship":"direct"},
+        {"framework_id":"openssf-osps-2026.02.19","references":["External Frameworks mappings"],"relationship":"contextual"},
+        {"framework_id":"owasp-asvs-5.0.0","references":["version-qualified requirement identifiers"],"relationship":"supporting"}
+      ],
+      "evidence": ["EV-CONTROL-EVIDENCE-MAP","EV-APPLICABILITY-REVIEW","EV-EXCEPTION-RECORD"]
+    },
+    {
+      "control_id": "EW-INC-001",
+      "frameworks": [
+        {"framework_id":"nist-ssdf-1.1","references":["RV.1","RV.2","RV.3"],"relationship":"direct"},
+        {"framework_id":"openssf-osps-2026.02.19","references":["Vulnerability Management"],"relationship":"supporting"}
+      ],
+      "evidence": ["EV-INCIDENT-RECORD","EV-POSTMORTEM","EV-CORRECTIVE-ACTION"]
+    }
+  ]
+}
