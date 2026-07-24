@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
@@ -40,6 +42,9 @@ jobs:
 
       - name: Validate locked open-source enforcement toolchain
         run: python3 scripts/validate_toolchain_lock.py
+
+      - name: Validate supply-chain policy and immutable workflow references
+        run: python3 scripts/validate_supply_chain.py
 
       - name: Run unit tests
         run: python3 -m unittest discover -s tests -v
