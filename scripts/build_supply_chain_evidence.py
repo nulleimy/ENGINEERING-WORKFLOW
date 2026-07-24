@@ -19,6 +19,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--directory", type=Path, required=True)
     parser.add_argument("--scan-exit-code", type=int, required=True)
+    parser.add_argument("--database-exit-code", type=int, required=True)
     parser.add_argument("--baseline", default=os.environ.get("GITHUB_SHA", "UNKNOWN"))
     parser.add_argument("--run-id", default=os.environ.get("GITHUB_RUN_ID", "UNKNOWN"))
     parser.add_argument("--run-attempt", default=os.environ.get("GITHUB_RUN_ATTEMPT", "UNKNOWN"))
@@ -33,10 +34,12 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def result_for_exit_code(value: int) -> str:
-    if value == 0:
+def result_for_exit_codes(scan: int, database: int) -> str:
+    if database != 0:
+        return "TOOL_FAILED"
+    if scan == 0:
         return "PASSED"
-    if value == 2:
+    if scan == 2:
         return "CONTROL_FAILED"
     return "TOOL_FAILED"
 
@@ -51,13 +54,14 @@ def main() -> int:
     lock = json.loads(LOCK.read_text(encoding="utf-8"))
     policy = json.loads(POLICY.read_text(encoding="utf-8"))
     tools = {item["id"]: item for item in lock.get("tools", []) if isinstance(item, dict) and item.get("id")}
-    result = result_for_exit_code(args.scan_exit_code)
+    result = result_for_exit_codes(args.scan_exit_code, args.database_exit_code)
 
     scan_status = {
         "schema_version": 1,
         "scanner": "grype",
         "scanner_version": tools["grype"]["version"],
-        "exit_code": args.scan_exit_code,
+        "scan_exit_code": args.scan_exit_code,
+        "database_exit_code": args.database_exit_code,
         "result": result,
         "blocking_threshold": policy["vulnerability"]["fail_on"],
         "silent_ignore_allowed": False,
