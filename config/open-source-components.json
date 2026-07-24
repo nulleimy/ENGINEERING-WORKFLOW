@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "catalog_version": "0.2.0-rc.1",
+  "components": [
+    {"id":"json-schema","state":"adopted","role":"portable record contracts","license":"open specification","source":"https://json-schema.org/"},
+    {"id":"opa","state":"selected","role":"general policy-as-code engine","license":"Apache-2.0","source":"https://github.com/open-policy-agent/opa"},
+    {"id":"conftest","state":"selected","role":"structured configuration policy adapter","license":"Apache-2.0","source":"https://github.com/open-policy-agent/conftest"},
+    {"id":"renovate","state":"configuration-ready","role":"cross-platform dependency automation","license":"AGPL-3.0-only","source":"https://github.com/renovatebot/renovate"},
+    {"id":"openssf-scorecard","state":"selected","role":"repository security posture","license":"Apache-2.0","source":"https://github.com/ossf/scorecard"},
+    {"id":"cyclonedx","state":"selected","role":"default BOM representation","license":"open standard","source":"https://cyclonedx.org/"},
+    {"id":"spdx","state":"selected","role":"license and supply-chain interchange","license":"ISO/IEC 5962:2021 open standard","source":"https://spdx.dev/"},
+    {"id":"syft","state":"evaluate","role":"SBOM generator candidate","license":"Apache-2.0","source":"https://github.com/anchore/syft"},
+    {"id":"trivy","state":"evaluate","role":"vulnerability, secret, misconfiguration and license scanner","license":"Apache-2.0","source":"https://github.com/aquasecurity/trivy"},
+    {"id":"cosign","state":"selected","role":"artifact signing and verification","license":"Apache-2.0","source":"https://github.com/sigstore/cosign"},
+    {"id":"opentelemetry","state":"selected","role":"portable observability","license":"Apache-2.0","source":"https://opentelemetry.io/"},
+    {"id":"backstage","state":"evaluate-later","role":"developer portal and software templates","license":"Apache-2.0","source":"https://github.com/backstage/backstage"}
+  ]
+}

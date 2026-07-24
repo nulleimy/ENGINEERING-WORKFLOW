@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "catalog_id": "engineering-workflow-controls",
+  "version": "0.2.0-rc.1",
+  "controls": [
+    {"id":"EW-GOV-001","domain":"governance","title":"Canonical project record and named authority","requirement":"MUST","minimum_risk":"R0","owner_role":"Project Steward","automation":"partial","verification":"schema-and-review","evidence_type":"project-record","exception_allowed":false},
+    {"id":"EW-PROD-001","domain":"product","title":"Problem, user and outcome definition","requirement":"MUST","minimum_risk":"R1","owner_role":"Product Steward","automation":"manual","verification":"work-package-review","evidence_type":"work-package","exception_allowed":true},
+    {"id":"EW-ARCH-001","domain":"architecture","title":"Architecture, data flow and trust boundaries","requirement":"MUST","minimum_risk":"R2","owner_role":"Technical Steward","automation":"partial","verification":"architecture-review","evidence_type":"architecture-record","exception_allowed":true},
+    {"id":"EW-DEL-001","domain":"delivery","title":"Bounded small vertical work package","requirement":"MUST","minimum_risk":"R1","owner_role":"Change Owner","automation":"partial","verification":"scope-and-acceptance-review","evidence_type":"work-package","exception_allowed":false},
+    {"id":"EW-QUAL-001","domain":"quality","title":"Risk-appropriate automated quality gate","requirement":"MUST","minimum_risk":"R1","owner_role":"Quality Authority","automation":"full","verification":"test-execution","evidence_type":"verification-record","exception_allowed":true},
+    {"id":"EW-SEC-001","domain":"security","title":"No secrets and threat-driven boundary review","requirement":"MUST","minimum_risk":"R0","owner_role":"Security Authority","automation":"partial","verification":"scan-and-threat-review","evidence_type":"security-evidence","exception_allowed":false},
+    {"id":"EW-SUP-001","domain":"supply-chain","title":"Dependency origin, license, SBOM and pinned automation","requirement":"MUST","minimum_risk":"R1","owner_role":"Technical Steward","automation":"partial","verification":"inventory-and-workflow-scan","evidence_type":"supply-chain-record","exception_allowed":true},
+    {"id":"EW-PLAT-001","domain":"platform","title":"Reproducible environment and golden path","requirement":"SHOULD","minimum_risk":"R1","owner_role":"Platform Owner","automation":"partial","verification":"rebuild-and-execution","evidence_type":"environment-record","exception_allowed":true},
+    {"id":"EW-REL-001","domain":"release","title":"Identified release with verified recovery","requirement":"MUST","minimum_risk":"R1","owner_role":"Release Authority","automation":"partial","verification":"release-gate-and-recovery","evidence_type":"release-record","exception_allowed":false},
+    {"id":"EW-OPS-001","domain":"operations","title":"Service ownership, observability and tested restore","requirement":"MUST","minimum_risk":"R2","owner_role":"Operator","automation":"partial","verification":"operational-readiness","evidence_type":"readiness-record","exception_allowed":true},
+    {"id":"EW-DOC-001","domain":"documentation","title":"Controlled metadata and documentation updated with change","requirement":"MUST","minimum_risk":"R0","owner_role":"Document Owner","automation":"partial","verification":"metadata-and-drift-check","evidence_type":"documentation-validation","exception_allowed":true},
+    {"id":"EW-AI-001","domain":"ai-engineering","title":"AI output remains untrusted until independently validated","requirement":"MUST","minimum_risk":"R0","owner_role":"Acceptance Authority","automation":"partial","verification":"deterministic-validation-and-human-acceptance","evidence_type":"ai-validation-record","exception_allowed":false},
+    {"id":"EW-COMP-001","domain":"compliance","title":"Control-to-evidence mapping from normal engineering work","requirement":"MUST","minimum_risk":"R2","owner_role":"Compliance Owner","automation":"partial","verification":"evidence-mapping","evidence_type":"control-evidence-map","exception_allowed":true},
+    {"id":"EW-INC-001","domain":"incident","title":"Incident timeline, recovery validation and corrective action","requirement":"MUST","minimum_risk":"R2","owner_role":"Incident Commander","automation":"partial","verification":"postmortem-review","evidence_type":"incident-record","exception_allowed":true}
+  ]
+}

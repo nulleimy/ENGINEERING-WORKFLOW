@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "version": "0.2.0-rc.1",
+  "profiles": [
+    {"id":"experiment","maximum_risk":"R1","required_controls":["EW-GOV-001","EW-PROD-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-DOC-001","EW-AI-001"],"prohibited":["production-data","production-credentials","external-sla"]},
+    {"id":"internal-tool","maximum_risk":"R2","required_controls":["EW-GOV-001","EW-PROD-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-SUP-001","EW-PLAT-001","EW-REL-001","EW-DOC-001","EW-AI-001"],"prohibited":["unreviewed-production-secret-access"]},
+    {"id":"standard-product","maximum_risk":"R2","required_controls":["EW-GOV-001","EW-PROD-001","EW-ARCH-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-SUP-001","EW-PLAT-001","EW-REL-001","EW-DOC-001","EW-AI-001","EW-COMP-001"],"prohibited":[]},
+    {"id":"production-service","maximum_risk":"R3","required_controls":["EW-GOV-001","EW-PROD-001","EW-ARCH-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-SUP-001","EW-PLAT-001","EW-REL-001","EW-OPS-001","EW-DOC-001","EW-AI-001","EW-COMP-001","EW-INC-001"],"prohibited":["unverified-recovery"]},
+    {"id":"security-critical","maximum_risk":"R3","required_controls":["EW-GOV-001","EW-PROD-001","EW-ARCH-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-SUP-001","EW-PLAT-001","EW-REL-001","EW-OPS-001","EW-DOC-001","EW-AI-001","EW-COMP-001","EW-INC-001"],"prohibited":["single-person-r3-acceptance","unverified-recovery","mutable-release-inputs"]}
+  ]
+}
