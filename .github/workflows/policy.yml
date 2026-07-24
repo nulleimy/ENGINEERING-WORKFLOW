@@ -37,7 +37,7 @@ jobs:
       - name: Verify OPA identity
         run: .tools/opa version
 
-      - name: Enforce canonical Rego formatting
+      - name: Produce canonical Rego files
         shell: bash
         run: |
           set -euo pipefail
@@ -46,7 +46,17 @@ jobs:
             echo "ERROR: no Rego policy files found" >&2
             exit 1
           fi
-          .tools/opa fmt --fail "${files[@]}"
+          .tools/opa fmt --write "${files[@]}"
+
+      - name: Upload canonical Rego snapshot
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: canonical-rego
+          path: policy
+          retention-days: 1
+
+      - name: Enforce zero formatting drift
+        run: git diff --exit-code -- policy
 
       - name: Run policy unit tests
         run: .tools/opa test policy -v
