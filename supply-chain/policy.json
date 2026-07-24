@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "version": "0.6.0-rc.1",
+  "artifact": {
+    "builder": "scripts/build_source_artifact.py",
+    "format": "tar.gz",
+    "deterministic": true,
+    "hash": "sha256",
+    "excluded_prefixes": [
+      ".git/",
+      ".tools/",
+      ".evidence/",
+      "__pycache__/",
+      ".pytest_cache/"
+    ]
+  },
+  "sbom": {
+    "generator": "syft",
+    "required_version": "1.49.0",
+    "source": "repository-directory",
+    "formats": [
+      "syft-json",
+      "cyclonedx-json",
+      "spdx-json"
+    ],
+    "native_format_is_authoritative": true
+  },
+  "vulnerability": {
+    "scanner": "grype",
+    "required_version": "0.116.0",
+    "input_format": "syft-json",
+    "fail_on": "high",
+    "vex_required_for_suppression": true,
+    "governed_exception_required_for_suppression": true,
+    "silent_ignore_allowed": false,
+    "database_status_evidence_required": true
+  },
+  "evidence": {
+    "directory": ".evidence",
+    "manifest": ".evidence/evidence-manifest.json",
+    "checksums": ".evidence/SHA256SUMS",
+    "retention_days": 30,
+    "required_result_states": [
+      "PASSED",
+      "CONTROL_FAILED",
+      "TOOL_FAILED",
+      "BLOCKED"
+    ]
+  }
+}
