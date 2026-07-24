@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "version": "0.5.0-rc.1",
+  "policy": {
+    "floating_versions_allowed": false,
+    "unverified_binary_execution_allowed": false,
+    "curl_pipe_shell_allowed": false,
+    "tool_failure_mode": "fail-closed-or-blocked",
+    "native_validator_required": true
+  },
+  "tools": [
+    {
+      "id": "opa",
+      "name": "Open Policy Agent",
+      "tool_class": "binary",
+      "version": "1.17.0",
+      "license": "Apache-2.0",
+      "state": "active",
+      "source": "https://github.com/open-policy-agent/opa",
+      "release": "https://github.com/open-policy-agent/opa/releases/tag/v1.17.0",
+      "artifacts": {
+        "linux-amd64": {
+          "url": "https://github.com/open-policy-agent/opa/releases/download/v1.17.0/opa_linux_amd64",
+          "sha256": "5485f9c32548af84bc0bfa06a7f40a98ecc742477a7f9f24ea3556d221dc295f"
+        },
+        "darwin-arm64": {
+          "url": "https://github.com/open-policy-agent/opa/releases/download/v1.17.0/opa_darwin_arm64",
+          "sha256": "48360aaa595e5bb2ae412355519f99e57360413552bb2b8786e9968a227fa009"
+        },
+        "darwin-amd64": {
+          "url": "https://github.com/open-policy-agent/opa/releases/download/v1.17.0/opa_darwin_amd64",
+          "sha256": "088f6c9d8c7b0e2ee0bee450cba7599953e3167649f3623019bada67a26229a4"
+        }
+      }
+    },
+    {
+      "id": "openssf-scorecard-action",
+      "name": "OpenSSF Scorecard GitHub Action",
+      "tool_class": "github-action",
+      "version": "2.4.3",
+      "license": "Apache-2.0",
+      "state": "active",
+      "source": "https://github.com/ossf/scorecard-action",
+      "immutable_ref": "4eaacf0543bb3f2c246792bd56e8cdeffafb205a"
+    },
+    {
+      "id": "conftest",
+      "name": "Conftest",
+      "tool_class": "binary",
+      "version": "0.68.2",
+      "license": "Apache-2.0",
+      "state": "selected",
+      "source": "https://github.com/open-policy-agent/conftest",
+      "activation_requirement": "capture and verify platform-specific release checksums; add policy compatibility tests"
+    },
+    {
+      "id": "syft",
+      "name": "Syft",
+      "tool_class": "binary",
+      "version": "1.44.0",
+      "license": "Apache-2.0",
+      "state": "selected",
+      "source": "https://github.com/anchore/syft",
+      "activation_requirement": "verify signed checksum manifest; generate CycloneDX 1.7 and SPDX interoperability evidence"
+    },
+    {
+      "id": "grype",
+      "name": "Grype",
+      "tool_class": "binary",
+      "version": "0.112.0",
+      "license": "Apache-2.0",
+      "state": "selected",
+      "source": "https://github.com/anchore/grype",
+      "activation_requirement": "verify signed checksum manifest; pin vulnerability database policy; define VEX and exception semantics"
+    },
+    {
+      "id": "cosign",
+      "name": "Cosign",
+      "tool_class": "binary",
+      "version": "3.0.6",
+      "license": "Apache-2.0",
+      "state": "selected",
+      "source": "https://github.com/sigstore/cosign",
+      "activation_requirement": "verify installer/action immutable ref; implement keyless signing, bundle verification and identity policy"
+    },
+    {
+      "id": "renovate",
+      "name": "Renovate",
+      "tool_class": "service-or-cli",
+      "version": "43.197.0",
+      "license": "AGPL-3.0-only",
+      "state": "configured",
+      "source": "https://github.com/renovatebot/renovate",
+      "activation_requirement": "approve hosted-app or self-hosted trust model; retain no-automerge default"
+    },
+    {
+      "id": "slsa-github-generator",
+      "name": "SLSA GitHub Generator",
+      "tool_class": "reusable-workflow",
+      "version": "unlocked",
+      "license": "Apache-2.0",
+      "state": "evaluate",
+      "source": "https://github.com/slsa-framework/slsa-github-generator",
+      "activation_requirement": "select immutable release ref and verify generated provenance against a real artifact"
+    },
+    {
+      "id": "opentelemetry",
+      "name": "OpenTelemetry",
+      "tool_class": "standard-and-sdk",
+      "version": "profile-specific",
+      "license": "Apache-2.0",
+      "state": "evaluate",
+      "source": "https://opentelemetry.io/",
+      "activation_requirement": "select language-specific SDK versions and define data minimization, sampling and retention"
+    },
+    {
+      "id": "backstage",
+      "name": "Backstage",
+      "tool_class": "developer-portal",
+      "version": "not-selected",
+      "license": "Apache-2.0",
+      "state": "deferred",
+      "source": "https://github.com/backstage/backstage",
+      "activation_requirement": "measured multi-project onboarding bottleneck and stable golden paths"
+    }
+  ]
+}

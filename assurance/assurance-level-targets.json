@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "version": "0.3.0-rc.1",
+  "selection_policy": "highest-applicable-assurance",
+  "levels": [
+    {
+      "id": "A1",
+      "name": "Professional Foundation",
+      "scope": "non-production experiments without production data, credentials or external SLA",
+      "targets": {
+        "nist_ssdf": "selected applicable PO, PS, PW and RV outcomes",
+        "slsa_source_minimum": "L1",
+        "slsa_build_minimum": "L0",
+        "owasp_asvs": "applicability assessment; selected requirements when a web/API surface exists",
+        "openssf_osps": "Level 1 when the project is public open source"
+      }
+    },
+    {
+      "id": "A2",
+      "name": "Controlled Engineering",
+      "scope": "internal tools and persistent team systems",
+      "targets": {
+        "nist_ssdf": "applicable SSDF 1.1 practices with recorded gaps",
+        "slsa_source_minimum": "L1",
+        "slsa_build_minimum": "L1",
+        "owasp_asvs": "Level 1 when applicable",
+        "openssf_osps": "Level 1 when public open source"
+      }
+    },
+    {
+      "id": "A3",
+      "name": "High-Assurance Product",
+      "scope": "supported products, public interfaces and integrations",
+      "targets": {
+        "nist_ssdf": "all applicable SSDF 1.1 tasks mapped to evidence",
+        "slsa_source_minimum": "L2",
+        "slsa_build_minimum": "L2",
+        "owasp_asvs": "Level 2 when applicable",
+        "openssf_osps": "highest applicable level, normally Level 2 for multi-maintainer code projects"
+      }
+    },
+    {
+      "id": "A4",
+      "name": "Production Assurance",
+      "scope": "operated user-facing services",
+      "targets": {
+        "nist_ssdf": "all applicable SSDF 1.1 tasks continuously evidenced",
+        "slsa_source_minimum": "L2",
+        "slsa_source_target": "L3",
+        "slsa_build_minimum": "L2",
+        "slsa_build_target": "L3",
+        "owasp_asvs": "Level 2 minimum and Level 3 for high-value security functions",
+        "openssf_osps": "highest applicable level, at least Level 2 for qualifying public projects"
+      }
+    },
+    {
+      "id": "A5",
+      "name": "Critical Trust",
+      "scope": "identity, authorization, sensitive data, critical infrastructure, irreversible migration or high-consequence autonomy",
+      "targets": {
+        "nist_ssdf": "all applicable SSDF 1.1 tasks plus SP 800-218A when AI-applicable, independently verified",
+        "slsa_source_minimum": "L3",
+        "slsa_build_minimum": "L3",
+        "owasp_asvs": "Level 3 when applicable",
+        "openssf_osps": "Level 3 when applicability conditions are met; otherwise all applicable lower-level controls plus documented gap review"
+      }
+    }
+  ]
+}

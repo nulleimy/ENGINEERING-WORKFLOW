@@ -1,0 +1,58 @@
+name: policy
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: policy-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  opa-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+
+      - name: Validate locked toolchain
+        run: python3 scripts/validate_toolchain_lock.py
+
+      - name: Bootstrap checksum-verified OPA
+        run: python3 scripts/bootstrap_verified_tool.py opa --platform linux-amd64 --output .tools/opa
+
+      - name: Verify OPA identity
+        run: .tools/opa version
+
+      - name: Enforce canonical Rego formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -d '' files < <(find policy -type f -name '*.rego' -print0 | sort -z)
+          if (( ${#files[@]} == 0 )); then
+            echo "ERROR: no Rego policy files found" >&2
+            exit 1
+          fi
+          .tools/opa fmt --fail "${files[@]}"
+
+      - name: Run policy unit tests
+        run: .tools/opa test policy -v
+
+      - name: Build deterministic policy input
+        run: python3 scripts/build_policy_input.py > .policy-input.json
+
+      - name: Block repository policy violations
+        run: .tools/opa eval --fail-defined --data policy --input .policy-input.json 'data.engineering.readiness.deny[_]'
