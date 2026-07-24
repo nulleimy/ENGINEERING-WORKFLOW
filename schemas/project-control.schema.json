@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nulleimy/ENGINEERING-WORKFLOW/schemas/project-control.schema.json",
+  "title": "ENGINEERING-WORKFLOW project control",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "project",
+    "control",
+    "quality"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "status",
+        "product_owner",
+        "technical_owner"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "concept",
+            "discovery",
+            "defined",
+            "building",
+            "validating",
+            "operating",
+            "maintenance",
+            "retired",
+            "archived"
+          ]
+        },
+        "product_owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "technical_owner": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "control": {
+      "type": "object",
+      "required": [
+        "version",
+        "canonical_repository",
+        "default_branch",
+        "normative_language",
+        "governance_file",
+        "technical_operating_mode"
+      ]
+    },
+    "quality": {
+      "type": "object",
+      "required": [
+        "validator",
+        "tests",
+        "release_requires_clean_validation"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

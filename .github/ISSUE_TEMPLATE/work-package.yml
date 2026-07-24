@@ -1,0 +1,41 @@
+name: Work package
+description: Define a controlled unit of engineering work
+title: "[WORK] "
+body:
+  - type: input
+    id: project
+    attributes:
+      label: Project
+    validations:
+      required: true
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk class
+      options: [R0, R1, R2, R3]
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current state / problem
+    validations:
+      required: true
+  - type: textarea
+    id: target
+    attributes:
+      label: Target state and acceptance criteria
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Allowed and prohibited scope
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification and recovery
+    validations:
+      required: true
