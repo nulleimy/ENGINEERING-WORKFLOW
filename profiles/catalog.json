@@ -1,11 +1,12 @@
 {
   "schema_version": 1,
-  "version": "0.2.0-rc.1",
+  "version": "0.2.0-rc.2",
+  "selection_policy": "highest-applicable-assurance; downgrade-by-convenience-prohibited",
   "profiles": [
-    {"id":"experiment","maximum_risk":"R1","required_controls":["EW-GOV-001","EW-PROD-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-DOC-001","EW-AI-001"],"prohibited":["production-data","production-credentials","external-sla"]},
-    {"id":"internal-tool","maximum_risk":"R2","required_controls":["EW-GOV-001","EW-PROD-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-SUP-001","EW-PLAT-001","EW-REL-001","EW-DOC-001","EW-AI-001"],"prohibited":["unreviewed-production-secret-access"]},
-    {"id":"standard-product","maximum_risk":"R2","required_controls":["EW-GOV-001","EW-PROD-001","EW-ARCH-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-SUP-001","EW-PLAT-001","EW-REL-001","EW-DOC-001","EW-AI-001","EW-COMP-001"],"prohibited":[]},
-    {"id":"production-service","maximum_risk":"R3","required_controls":["EW-GOV-001","EW-PROD-001","EW-ARCH-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-SUP-001","EW-PLAT-001","EW-REL-001","EW-OPS-001","EW-DOC-001","EW-AI-001","EW-COMP-001","EW-INC-001"],"prohibited":["unverified-recovery"]},
-    {"id":"security-critical","maximum_risk":"R3","required_controls":["EW-GOV-001","EW-PROD-001","EW-ARCH-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-SUP-001","EW-PLAT-001","EW-REL-001","EW-OPS-001","EW-DOC-001","EW-AI-001","EW-COMP-001","EW-INC-001"],"prohibited":["single-person-r3-acceptance","unverified-recovery","mutable-release-inputs"]}
+    {"id":"experiment","assurance_level":"A1-professional-foundation","maximum_risk":"R1","required_controls":["EW-GOV-001","EW-GOV-002","EW-PROD-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-DOC-001","EW-AI-001"],"prohibited":["production-data","production-credentials","external-sla","profile-downgrade-to-avoid-controls"]},
+    {"id":"internal-tool","assurance_level":"A2-controlled-engineering","maximum_risk":"R2","required_controls":["EW-GOV-001","EW-GOV-002","EW-PROD-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-SUP-001","EW-PLAT-001","EW-REL-001","EW-DOC-001","EW-AI-001"],"prohibited":["unreviewed-production-secret-access","profile-downgrade-to-avoid-controls"]},
+    {"id":"standard-product","assurance_level":"A3-high-assurance-product","maximum_risk":"R2","required_controls":["EW-GOV-001","EW-GOV-002","EW-PROD-001","EW-ARCH-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-SUP-001","EW-PLAT-001","EW-REL-001","EW-DOC-001","EW-AI-001","EW-COMP-001"],"prohibited":["profile-downgrade-to-avoid-controls"]},
+    {"id":"production-service","assurance_level":"A4-production-assurance","maximum_risk":"R3","required_controls":["EW-GOV-001","EW-GOV-002","EW-PROD-001","EW-ARCH-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-SUP-001","EW-PLAT-001","EW-REL-001","EW-OPS-001","EW-DOC-001","EW-AI-001","EW-COMP-001","EW-INC-001"],"prohibited":["unverified-recovery","profile-downgrade-to-avoid-controls"]},
+    {"id":"security-critical","assurance_level":"A5-critical-trust","maximum_risk":"R3","required_controls":["EW-GOV-001","EW-GOV-002","EW-PROD-001","EW-ARCH-001","EW-DEL-001","EW-QUAL-001","EW-SEC-001","EW-SUP-001","EW-PLAT-001","EW-REL-001","EW-OPS-001","EW-DOC-001","EW-AI-001","EW-COMP-001","EW-INC-001"],"prohibited":["single-person-r3-acceptance","unverified-recovery","mutable-release-inputs","profile-downgrade-to-avoid-controls"]}
   ]
 }
