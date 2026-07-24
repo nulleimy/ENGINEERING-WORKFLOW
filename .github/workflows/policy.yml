@@ -37,42 +37,16 @@ jobs:
       - name: Verify OPA identity
         run: .tools/opa version
 
-      - name: Produce canonical Rego files and diagnostics
+      - name: Enforce canonical Rego formatting
         shell: bash
         run: |
           set -euo pipefail
           mapfile -d '' files < <(find policy -type f -name '*.rego' -print0 | sort -z)
           if (( ${#files[@]} == 0 )); then
-            echo "ERROR: no Rego policy files found" > .opa-fmt.stderr
-            echo 1 > .opa-fmt.status
-            exit 0
+            echo "ERROR: no Rego policy files found" >&2
+            exit 1
           fi
-          set +e
-          .tools/opa fmt --write "${files[@]}" > .opa-fmt.stdout 2> .opa-fmt.stderr
-          status=$?
-          set -e
-          echo "$status" > .opa-fmt.status
-
-      - name: Upload canonical Rego diagnostics
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: canonical-rego-diagnostics
-          path: |
-            policy
-            .opa-fmt.stdout
-            .opa-fmt.stderr
-            .opa-fmt.status
-          retention-days: 1
-          include-hidden-files: true
-
-      - name: Enforce successful canonical formatting
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat .opa-fmt.stderr >&2 || true
-          test "$(cat .opa-fmt.status)" = "0"
-          git diff --exit-code -- policy
+          .tools/opa fmt --fail "${files[@]}"
 
       - name: Run policy unit tests
         run: .tools/opa test policy -v
