@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "version": "0.5.0-rc.1",
+  "state": "IMPLEMENTED_NOT_YET_CI_VERIFIED",
+  "baseline": "ffd24d1c2165c5848066ee44dd57668668b8f062",
+  "controls_addressed": ["EW-SEC-001", "EW-SUP-001", "EW-PLAT-001"],
+  "gaps_addressed": ["GAP-007", "GAP-009", "GAP-010"],
+  "active_tools": [
+    {
+      "id": "opa",
+      "version": "1.17.0",
+      "verification": "platform-specific SHA-256 before execution"
+    },
+    {
+      "id": "openssf-scorecard-action",
+      "version": "2.4.3",
+      "verification": "immutable 40-character action commit"
+    }
+  ],
+  "verified": [],
+  "not_verified": [
+    "GitHub Actions quality workflow",
+    "GitHub Actions policy workflow",
+    "actual OpenSSF Scorecard scheduled run",
+    "SBOM generation",
+    "vulnerability scan",
+    "provenance generation",
+    "artifact signing and verification"
+  ],
+  "claim": "No readiness score or gap is closed by this record until CI evidence is attached."
+}
