@@ -37,6 +37,10 @@
     "profiles/catalog.json",
     "open-source/OPEN_SOURCE_ADOPTION_POLICY.md",
     "config/open-source-components.json",
+    "platform/OPEN_SOURCE_ENFORCEMENT_PLANE.md",
+    "platform/toolchain.lock.json",
+    "policy/engineering/readiness.rego",
+    "policy/engineering/readiness_test.rego",
     "assurance/ASSURANCE_MAPPING_STANDARD.md",
     "assurance/framework-catalog.json",
     "assurance/assurance-level-targets.json",
@@ -66,11 +70,17 @@
     "scripts/validate_control_catalog.py",
     "scripts/validate_assurance_mapping.py",
     "scripts/validate_readiness.py",
+    "scripts/validate_toolchain_lock.py",
+    "scripts/bootstrap_verified_tool.py",
+    "scripts/build_policy_input.py",
     "tests/test_validate_repository.py",
     "tests/test_control_catalog.py",
     "tests/test_assurance_mapping.py",
     "tests/test_readiness.py",
+    "tests/test_toolchain_lock.py",
     ".github/workflows/quality.yml",
+    ".github/workflows/policy.yml",
+    ".github/workflows/scorecard.yml",
     ".github/pull_request_template.md"
   ]
 }
