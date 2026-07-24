@@ -6,7 +6,6 @@ import argparse
 import gzip
 import hashlib
 import json
-import os
 import tarfile
 from pathlib import Path
 
@@ -31,6 +30,13 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def display_path(path: Path) -> str:
+    try:
+        return path.relative_to(ROOT).as_posix()
+    except ValueError:
+        return str(path)
+
+
 def build(output: Path) -> int:
     output.parent.mkdir(parents=True, exist_ok=True)
     files = source_files()
@@ -39,13 +45,14 @@ def build(output: Path) -> int:
             with tarfile.open(fileobj=compressed, mode="w") as archive:
                 for path in files:
                     relative = path.relative_to(ROOT)
+                    content = path.read_bytes()
                     info = archive.gettarinfo(str(path), arcname=relative.as_posix())
                     info.uid = 0
                     info.gid = 0
                     info.uname = ""
                     info.gname = ""
                     info.mtime = 0
-                    info.mode = 0o755 if os.access(path, os.X_OK) else 0o644
+                    info.mode = 0o755 if content.startswith(b"#!") else 0o644
                     with path.open("rb") as handle:
                         archive.addfile(info, handle)
     return len(files)
@@ -61,10 +68,11 @@ def main() -> int:
     manifest = ROOT / args.manifest
     count = build(output)
     manifest.parent.mkdir(parents=True, exist_ok=True)
-    manifest.write_text(f"{sha256(output)}  {output.name}\n", encoding="utf-8")
+    artifact_digest = sha256(output)
+    manifest.write_text(f"{artifact_digest}  {output.name}\n", encoding="utf-8")
     metadata = {
         "artifact": output.name,
-        "sha256": sha256(output),
+        "sha256": artifact_digest,
         "source_files": count,
         "deterministic_epoch": 0,
     }
@@ -72,9 +80,9 @@ def main() -> int:
         json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     print("ARTIFACT_BUILD=PASSED")
-    print(f"ARTIFACT={output.relative_to(ROOT)}")
+    print(f"ARTIFACT={display_path(output)}")
     print(f"SOURCE_FILES={count}")
-    print(f"SHA256={metadata['sha256']}")
+    print(f"SHA256={artifact_digest}")
     return 0
 
 
