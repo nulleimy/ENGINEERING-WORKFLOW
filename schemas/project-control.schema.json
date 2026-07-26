@@ -18,12 +18,13 @@
     },
     "cli": {
       "type": "object",
-      "required": ["version", "entrypoint", "foundation_document", "commands", "git_required", "external_runtime_dependencies"],
+      "required": ["version", "entrypoint", "foundation_document", "adoption_document", "commands", "git_required", "external_runtime_dependencies"],
       "properties": {
-        "version": {"const": "0.1.0"},
+        "version": {"const": "0.2.0"},
         "entrypoint": {"const": "bin/ew"},
         "foundation_document": {"const": "platform/EW_CLI_FOUNDATION.md"},
-        "commands": {"const": ["init", "doctor", "self-test"]},
+        "adoption_document": {"const": "platform/EW_ADOPT_FOUNDATION.md"},
+        "commands": {"const": ["init", "adopt", "doctor", "rollback", "self-test"]},
         "git_required": {"const": false},
         "external_runtime_dependencies": {"type": "array", "maxItems": 0}
       },
