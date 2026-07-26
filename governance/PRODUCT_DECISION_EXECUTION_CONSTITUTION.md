@@ -3,14 +3,32 @@ id: EW-CONSTITUTION-PDRE-001
 title: Product, Decision and Execution Constitution
 status: proposed
 owner: Eimy Herrer and Johny
-version: 1.0.0-rc2
+version: 1.0.0-rc3
 last-reviewed: 2026-07-26
 normative-language: cs
 technical-constitution-sha256: ed44c6147049887d941b7497f1bce3b817f22b6ae00a5136a27365a2f688d918
-related: WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md; ENGINEERING_CONSTITUTION.md; GOVERNANCE_MODEL.md
+related: WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md; ENGINEERING_CONSTITUTION.md; GOVERNANCE_MODEL.md; PRIMARY_ENGINEERING_INVARIANT.json
 ---
 
 # PRODUKTOVÁ, ROZHODOVACÍ A REALIZAČNÍ ÚSTAVA
+
+## ČLÁNEK 0 — PRIMÁRNÍ VÝVOJOVÝ INVARIANT
+
+Nejsilnější vývojový model spojuje **Jobsovu produktovou čistotu, unixovou jednoduchost, DevOps automatizaci, SRE spolehlivost, bezpečnostní princip nulové důvěry a úplnou auditovatelnost celého životního cyklu systému — nejen jeho Git historie**.
+
+Každá změna musí být:
+
+- **jednoduchá** — používá nejmenší přiměřený počet komponent, závislostí, služeb, trust boundaries a manuálních kroků;
+- **účelná** — řeší doložený produktový, provozní, bezpečnostní nebo technický problém;
+- **automatizovaná** — opakovatelný deterministický krok je automatizovaný, nebo je vedený jako vlastněný a expirovaný automation debt;
+- **bezpečná** — používá secure defaults, least privilege, explicitní trust boundaries a fail-closed chování;
+- **měřitelná** — má acceptance criteria, pozorovatelný výsledek a přiměřené produktové, delivery, reliability nebo security metriky;
+- **vratná** — má klasifikaci `REV-0` až `REV-4` a ověřený rollback nebo safe-forward odpovídající riziku;
+- **důkazně ověřitelná** — propojuje problém, rozhodnutí, Work Package, změnu, verifikaci, přijetí, release, provoz a učení strojově čitelnou evidencí.
+
+Změna, která některou vlastnost nesplňuje, musí být `BLOCKED`, nebo mít explicitní důvod, vlastníka, rizikovou klasifikaci, kompenzační kontrolu, expirační podmínku a oprávněné přijetí. Pravdivost stavů, integrita evidence, ochrana secrets a explicitní autorizace chráněných operací výjimku nemají.
+
+Strojově čitelná interpretace tohoto článku je v `PRIMARY_ENGINEERING_INVARIANT.json`. Complexity budget, reversibility classes, manual-work register a lifecycle evidence graph jsou jeho povinné kontrolní mechanismy.
 
 ## 0. Účel a vztah k technické ústavě
 
@@ -144,13 +162,19 @@ Práce je připravena k implementaci, když:
 - riziko a dotčené kontrakty jsou známé;
 - závislosti a blockers jsou zjištěné;
 - existuje způsob ověření a rollback/safe-forward;
-- změna je dostatečně malá.
+- změna je dostatečně malá;
+- complexity budget je vyhodnocený;
+- reversibility class je přiřazená;
+- opakované manuální kroky jsou v manual-work registru;
+- lifecycle evidence graph má identitu a očekávané vazby.
 
 ## 12. Definition of Done
 
 Tato definice doplňuje technickou Definition of Done; požadavky jsou kumulativní.
 
 Změna je hotová pouze tehdy, když existuje implementace, prošly relevantní build/lint/type/test/security gate, dokumentace odpovídá realitě, telemetry jsou přiměřené riziku, rollback/safe-forward je proveditelný, evidence je vytvořená, nejsou skryté manuální kroky, review je dokončeno a stav je pravdivě reportovaný.
+
+Navíc musí být uzavřené nebo explicitně vlastněné překročení complexity budgetu, `REV-3`/`REV-4` musí mít přijatý safe-forward a lifecycle evidence graph nesmí obsahovat osiřelý release, deployment nebo incident.
 
 ## 13. Release Ready a Operational Ready
 
