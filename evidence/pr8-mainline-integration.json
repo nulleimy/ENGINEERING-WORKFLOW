@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "id": "EW-EV-PR8-MAINLINE-INTEGRATION",
+  "status": "IMPLEMENTED_AWAITING_CI",
+  "source_pr": 8,
+  "source_head": "11b0762d02325de2baa8526afd92613aee710c2b",
+  "main_baseline": "b4771d06850d1d76e5aab51f12eb24e267cf5666",
+  "integration_branch": "integration/pr8-governance-on-main-v0.7.1",
+  "strategy": "rebuild-on-current-main-preserving-supply-chain",
+  "preserved_controls": [
+    "quality",
+    "policy",
+    "supply-chain",
+    "deterministic-artifact",
+    "cyclonedx-sbom",
+    "vulnerability-gate",
+    "provenance-signing-workflow"
+  ],
+  "integrated_controls": [
+    "constitutional-authority",
+    "product-decision-execution-constitution",
+    "primary-engineering-invariant",
+    "complexity-budget",
+    "reversibility-classes",
+    "manual-work-register",
+    "lifecycle-evidence-graph"
+  ],
+  "claims": {
+    "main_changed": false,
+    "source_pr_changed": false,
+    "merge_performed": false,
+    "ci_verified": false
+  }
+}
