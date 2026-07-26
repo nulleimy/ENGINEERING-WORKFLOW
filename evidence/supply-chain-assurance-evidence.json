@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "EW-EV-SUPPLY-CHAIN-V0.6",
+  "version": "0.6.0-rc.1",
+  "status": "PR_VERIFIED_AWAITING_MAIN_ATTESTATION_AND_REVIEW",
+  "scope": "reference artifact packaging, CycloneDX SBOM, vulnerability gate, provenance, keyless signing and verification workflows",
+  "verified_at": "2026-07-24T12:11:53Z",
+  "verified_head": "075c9a89e44a21963441b98c9b7f786c99b3e816",
+  "workflow_evidence": {
+    "quality": {"run_id": 30092152268, "conclusion": "success"},
+    "policy": {"run_id": 30092152284, "conclusion": "success"},
+    "supply_chain_pr": {"run_id": 30092152601, "conclusion": "success"},
+    "artifact_id": 8596111681,
+    "artifact_digest": "sha256:b8e9a600ab37d6649a7ef2dcc9536df0d998d8e05319615989f1506ea7db227a",
+    "artifact_retention_until": "2026-08-23T12:11:53Z"
+  },
+  "verified": [
+    "deterministic archive builder and regression test",
+    "SHA-256 manifest",
+    "CycloneDX SBOM generation",
+    "Grype high and critical vulnerability blocking",
+    "native unknown-severity and report validation",
+    "portable evidence record",
+    "immutable action-reference policy",
+    "OPA policy gate",
+    "PR signing authority correctly skipped"
+  ],
+  "implemented_not_yet_executed": [
+    "OIDC-gated build provenance attestation on main or tag",
+    "OIDC-gated SBOM attestation on main or tag",
+    "Cosign keyless signing on main or tag",
+    "Cosign issuer and workflow-identity verification on main or tag"
+  ],
+  "not_claimed": [
+    "SLSA level",
+    "world-class readiness",
+    "certification",
+    "production release",
+    "GAP-009 closure"
+  ],
+  "remaining_closure_evidence": [
+    "successful main or tag attestation and signature verification",
+    "retained signed evidence bundle",
+    "independent security and release review"
+  ]
+}

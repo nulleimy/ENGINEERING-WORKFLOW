@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "0.5.0-rc.1",
+  "version": "0.6.0-rc.1",
   "policy": {
     "floating_versions_allowed": false,
     "unverified_binary_execution_allowed": false,
@@ -19,109 +19,24 @@
       "source": "https://github.com/open-policy-agent/opa",
       "release": "https://github.com/open-policy-agent/opa/releases/tag/v1.17.0",
       "artifacts": {
-        "linux-amd64": {
-          "url": "https://github.com/open-policy-agent/opa/releases/download/v1.17.0/opa_linux_amd64",
-          "sha256": "5485f9c32548af84bc0bfa06a7f40a98ecc742477a7f9f24ea3556d221dc295f"
-        },
-        "darwin-arm64": {
-          "url": "https://github.com/open-policy-agent/opa/releases/download/v1.17.0/opa_darwin_arm64",
-          "sha256": "48360aaa595e5bb2ae412355519f99e57360413552bb2b8786e9968a227fa009"
-        },
-        "darwin-amd64": {
-          "url": "https://github.com/open-policy-agent/opa/releases/download/v1.17.0/opa_darwin_amd64",
-          "sha256": "088f6c9d8c7b0e2ee0bee450cba7599953e3167649f3623019bada67a26229a4"
-        }
+        "linux-amd64": {"url": "https://github.com/open-policy-agent/opa/releases/download/v1.17.0/opa_linux_amd64", "sha256": "5485f9c32548af84bc0bfa06a7f40a98ecc742477a7f9f24ea3556d221dc295f"},
+        "darwin-arm64": {"url": "https://github.com/open-policy-agent/opa/releases/download/v1.17.0/opa_darwin_arm64", "sha256": "48360aaa595e5bb2ae412355519f99e57360413552bb2b8786e9968a227fa009"},
+        "darwin-amd64": {"url": "https://github.com/open-policy-agent/opa/releases/download/v1.17.0/opa_darwin_amd64", "sha256": "088f6c9d8c7b0e2ee0bee450cba7599953e3167649f3623019bada67a26229a4"}
       }
     },
-    {
-      "id": "openssf-scorecard-action",
-      "name": "OpenSSF Scorecard GitHub Action",
-      "tool_class": "github-action",
-      "version": "2.4.3",
-      "license": "Apache-2.0",
-      "state": "active",
-      "source": "https://github.com/ossf/scorecard-action",
-      "immutable_ref": "4eaacf0543bb3f2c246792bd56e8cdeffafb205a"
-    },
-    {
-      "id": "conftest",
-      "name": "Conftest",
-      "tool_class": "binary",
-      "version": "0.68.2",
-      "license": "Apache-2.0",
-      "state": "selected",
-      "source": "https://github.com/open-policy-agent/conftest",
-      "activation_requirement": "capture and verify platform-specific release checksums; add policy compatibility tests"
-    },
-    {
-      "id": "syft",
-      "name": "Syft",
-      "tool_class": "binary",
-      "version": "1.44.0",
-      "license": "Apache-2.0",
-      "state": "selected",
-      "source": "https://github.com/anchore/syft",
-      "activation_requirement": "verify signed checksum manifest; generate CycloneDX 1.7 and SPDX interoperability evidence"
-    },
-    {
-      "id": "grype",
-      "name": "Grype",
-      "tool_class": "binary",
-      "version": "0.112.0",
-      "license": "Apache-2.0",
-      "state": "selected",
-      "source": "https://github.com/anchore/grype",
-      "activation_requirement": "verify signed checksum manifest; pin vulnerability database policy; define VEX and exception semantics"
-    },
-    {
-      "id": "cosign",
-      "name": "Cosign",
-      "tool_class": "binary",
-      "version": "3.0.6",
-      "license": "Apache-2.0",
-      "state": "selected",
-      "source": "https://github.com/sigstore/cosign",
-      "activation_requirement": "verify installer/action immutable ref; implement keyless signing, bundle verification and identity policy"
-    },
-    {
-      "id": "renovate",
-      "name": "Renovate",
-      "tool_class": "service-or-cli",
-      "version": "43.197.0",
-      "license": "AGPL-3.0-only",
-      "state": "configured",
-      "source": "https://github.com/renovatebot/renovate",
-      "activation_requirement": "approve hosted-app or self-hosted trust model; retain no-automerge default"
-    },
-    {
-      "id": "slsa-github-generator",
-      "name": "SLSA GitHub Generator",
-      "tool_class": "reusable-workflow",
-      "version": "unlocked",
-      "license": "Apache-2.0",
-      "state": "evaluate",
-      "source": "https://github.com/slsa-framework/slsa-github-generator",
-      "activation_requirement": "select immutable release ref and verify generated provenance against a real artifact"
-    },
-    {
-      "id": "opentelemetry",
-      "name": "OpenTelemetry",
-      "tool_class": "standard-and-sdk",
-      "version": "profile-specific",
-      "license": "Apache-2.0",
-      "state": "evaluate",
-      "source": "https://opentelemetry.io/",
-      "activation_requirement": "select language-specific SDK versions and define data minimization, sampling and retention"
-    },
-    {
-      "id": "backstage",
-      "name": "Backstage",
-      "tool_class": "developer-portal",
-      "version": "not-selected",
-      "license": "Apache-2.0",
-      "state": "deferred",
-      "source": "https://github.com/backstage/backstage",
-      "activation_requirement": "measured multi-project onboarding bottleneck and stable golden paths"
-    }
+    {"id":"openssf-scorecard-action","name":"OpenSSF Scorecard GitHub Action","tool_class":"github-action","version":"2.4.3","license":"Apache-2.0","state":"active","source":"https://github.com/ossf/scorecard-action","immutable_ref":"4eaacf0543bb3f2c246792bd56e8cdeffafb205a"},
+    {"id":"anchore-sbom-action","name":"Anchore SBOM Action","tool_class":"github-action","version":"v0 with Syft 1.44.0","license":"Apache-2.0","state":"active","source":"https://github.com/anchore/sbom-action","immutable_ref":"e22c389904149dbc22b58101806040fa8d37a610"},
+    {"id":"anchore-scan-action","name":"Anchore Scan Action","tool_class":"github-action","version":"7.4.0 with Grype 0.112.0","license":"MIT","state":"active","source":"https://github.com/anchore/scan-action","immutable_ref":"e1165082ffb1fe366ebaf02d8526e7c4989ea9d2"},
+    {"id":"cosign-installer-action","name":"Cosign Installer","tool_class":"github-action","version":"4.1.2 with Cosign 3.0.6","license":"Apache-2.0","state":"active","source":"https://github.com/sigstore/cosign-installer","immutable_ref":"6f9f17788090df1f26f669e9d70d6ae9567deba6"},
+    {"id":"github-attest-action","name":"GitHub Artifact Attest","tool_class":"github-action","version":"4","license":"MIT","state":"active","source":"https://github.com/actions/attest","immutable_ref":"f7c74d28b9d84cb8768d0b8ca14a4bac6ef463e6"},
+    {"id":"upload-artifact-action","name":"GitHub Upload Artifact","tool_class":"github-action","version":"7.0.1","license":"MIT","state":"active","source":"https://github.com/actions/upload-artifact","immutable_ref":"043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"},
+    {"id":"download-artifact-action","name":"GitHub Download Artifact","tool_class":"github-action","version":"8.0.1","license":"MIT","state":"active","source":"https://github.com/actions/download-artifact","immutable_ref":"3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c"},
+    {"id":"conftest","name":"Conftest","tool_class":"binary","version":"0.68.2","license":"Apache-2.0","state":"selected","source":"https://github.com/open-policy-agent/conftest","activation_requirement":"capture and verify platform-specific release checksums; add policy compatibility tests"},
+    {"id":"syft","name":"Syft","tool_class":"binary","version":"1.44.0","license":"Apache-2.0","state":"selected","source":"https://github.com/anchore/syft","activation_requirement":"direct-binary adapter requires signed checksum verification; action adapter is active"},
+    {"id":"grype","name":"Grype","tool_class":"binary","version":"0.112.0","license":"Apache-2.0","state":"selected","source":"https://github.com/anchore/grype","activation_requirement":"direct-binary adapter requires signed checksum and controlled database verification; action adapter is active"},
+    {"id":"cosign","name":"Cosign","tool_class":"binary","version":"3.0.6","license":"Apache-2.0","state":"selected","source":"https://github.com/sigstore/cosign","activation_requirement":"direct-binary adapter requires release-bundle verification; installer action is active"},
+    {"id":"renovate","name":"Renovate","tool_class":"service-or-cli","version":"43.197.0","license":"AGPL-3.0-only","state":"configured","source":"https://github.com/renovatebot/renovate","activation_requirement":"approve hosted-app or self-hosted trust model; retain no-automerge default"},
+    {"id":"opentelemetry","name":"OpenTelemetry","tool_class":"standard-and-sdk","version":"profile-specific","license":"Apache-2.0","state":"evaluate","source":"https://opentelemetry.io/","activation_requirement":"select language-specific SDK versions and define data minimization, sampling and retention"},
+    {"id":"backstage","name":"Backstage","tool_class":"developer-portal","version":"not-selected","license":"Apache-2.0","state":"deferred","source":"https://github.com/backstage/backstage","activation_requirement":"measured multi-project onboarding bottleneck and stable golden paths"}
   ]
 }
