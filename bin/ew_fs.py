@@ -52,7 +52,9 @@ def read_stable_file(
     try:
         descriptor = os.open(path, flags)
         opened = os.fstat(descriptor)
-        if not stat.S_ISREG(opened.st_mode) or not same_identity(before, opened):
+        if not stat.S_ISREG(opened.st_mode):
+            raise SafeFileError(f"file changed before safe open: {path}")
+        if os.name != "nt" and not same_identity(before, opened):
             raise SafeFileError(f"file changed before safe open: {path}")
         chunks: list[bytes] = []
         total = 0
@@ -75,14 +77,27 @@ def read_stable_file(
         after_path = path.lstat()
     except OSError as exc:
         raise SafeFileError(f"file disappeared after read: {path}: {exc}") from exc
-    if not (
-        same_identity(before, opened)
-        and same_identity(opened, after_descriptor)
-        and same_identity(after_descriptor, after_path)
-        and stat_signature(before) == stat_signature(opened)
-        and stat_signature(opened) == stat_signature(after_descriptor)
-        and stat_signature(after_descriptor) == stat_signature(after_path)
-    ):
+    if os.name == "nt":
+        # Python 3.12 made Windows path stat identifiers more accurate (up to
+        # 128-bit file indexes). Path and descriptor stat domains are not a
+        # stable cross-domain equality contract, so verify each domain across
+        # time: path before/after and descriptor open/after-read.
+        stable = (
+            same_identity(before, after_path)
+            and same_identity(opened, after_descriptor)
+            and stat_signature(before) == stat_signature(after_path)
+            and stat_signature(opened) == stat_signature(after_descriptor)
+        )
+    else:
+        stable = (
+            same_identity(before, opened)
+            and same_identity(opened, after_descriptor)
+            and same_identity(after_descriptor, after_path)
+            and stat_signature(before) == stat_signature(opened)
+            and stat_signature(opened) == stat_signature(after_descriptor)
+            and stat_signature(after_descriptor) == stat_signature(after_path)
+        )
+    if not stable:
         raise SafeFileError(f"file changed during verified read: {path}")
     return b"".join(chunks), opened
 
