@@ -18,7 +18,9 @@ class EWCLITest(unittest.TestCase):
     def test_self_test(self) -> None:
         result = run_ew("self-test", "--json")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertEqual(json.loads(result.stdout)["status"], "PASS")
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["status"], "PASS")
+        self.assertTrue(all(payload["details"]["assertions"].values()))
 
     def test_dry_run_does_not_write(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

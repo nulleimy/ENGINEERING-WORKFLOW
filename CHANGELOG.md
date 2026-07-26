@@ -3,7 +3,7 @@ id: EW-CHANGELOG
 title: Changelog
 status: current
 owner: Eimy Herrer and Johny
-version: 0.8.0-rc.1
+version: 0.9.0-rc.1
 last-reviewed: 2026-07-26
 ---
 
@@ -23,12 +23,19 @@ All notable changes are recorded here. Versions follow Semantic Versioning.
 - Product Definition, Decision Record, Authority Assignment and Manual Work templates;
 - dependency-free `ew init`, `ew doctor` and `ew self-test` foundation;
 - atomic controlled-directory generation, manifest integrity and profile downgrade protection;
-- repository-native entrypoint without Git or external runtime dependencies.
+- repository-native entrypoint without Git or external runtime dependencies;
+- preview-first `ew adopt` for existing projects;
+- bounded read-only inventory, technology detection and source fingerprinting;
+- sensitive-path content redaction and explicit acknowledgement gate;
+- pre-adoption evidence snapshot and no-source-change proof;
+- preview-first `ew rollback` limited to manifest-owned bootstrap state;
+- adoption schemas, documentation and negative regression tests.
 
 ### Planned
 
 - repository rulesets and branch protection;
-- `ew adopt`, upgrade and migration automation;
+- semantic project migration and upgrade automation;
+- language and deployment golden paths;
 - reusable deployment adapters;
 - compliance evidence generation;
 - real new-project and existing-project pilots.
