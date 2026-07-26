@@ -3,7 +3,7 @@ id: EW-README
 title: ENGINEERING-WORKFLOW
 status: current
 owner: Eimy Herrer and Johny
-version: 0.7.0-rc.2
+version: 0.9.1-rc.1
 last-reviewed: 2026-07-26
 ---
 
@@ -16,6 +16,53 @@ last-reviewed: 2026-07-26
 > Product cleanliness + Unix simplicity + DevOps automation + SRE reliability + zero-trust security + lifecycle-wide auditability.
 
 Every change must be simple, purposeful, automated, secure, measurable, reversible and evidence-verifiable. The exact constitutional text and machine-readable interpretation are enforced by hash and independent CI gates.
+
+## Executable product layer
+
+The dependency-free repository-native `ew` CLI provides:
+
+```text
+ew init
+ew adopt
+ew doctor
+ew rollback
+ew self-test
+```
+
+### New project
+
+```bash
+./bin/ew init ./my-project --name "My Project" --profile standard-product --risk R2 --reversibility REV-2 --dry-run
+./bin/ew init ./my-project --name "My Project" --profile standard-product --risk R2 --reversibility REV-2
+./bin/ew doctor ./my-project --json
+```
+
+`ew init` writes only `.engineering-workflow/`, stages the complete controlled directory before atomic publication, never overwrites controlled state and returns `NOOP` for an identical repeated request.
+
+### Existing project
+
+Adoption is read-only by default:
+
+```bash
+./bin/ew adopt ./existing-project --name "Existing Project" --profile standard-product --risk R2 --reversibility REV-2 --json
+```
+
+Writing requires explicit `--apply`:
+
+```bash
+./bin/ew adopt ./existing-project --name "Existing Project" --profile standard-product --risk R2 --reversibility REV-2 --apply --json
+```
+
+Adoption performs a bounded inventory, detects common technologies, computes a source fingerprint, records blockers and writes only `.engineering-workflow/`. Symlinks are not followed. Sensitive-path content is not read or hashed.
+
+Bootstrap rollback is preview-first and limited to the manifest-owned control directory:
+
+```bash
+./bin/ew rollback ./existing-project --json
+./bin/ew rollback ./existing-project --apply --json
+```
+
+Git is not required and the CLI has no external runtime dependencies.
 
 ## Constitutional entry point
 
@@ -43,6 +90,7 @@ python3 scripts/validate_assurance_mapping.py
 python3 scripts/validate_readiness.py
 python3 scripts/validate_toolchain_lock.py
 python3 scripts/validate_supply_chain.py
+./bin/ew self-test --json
 python3 -m unittest discover -s tests -v
 ```
 
@@ -55,15 +103,16 @@ For R1-R3 work, evaluate [`config/complexity-budget.json`](config/complexity-bud
 - `architecture/`, `controls/`, `profiles/`, `assurance/`, `readiness/` — machine-readable engineering control plane;
 - `documentation/`, `evidence/` — documentation, lifecycle graph, evidence and retention;
 - `supply-chain/` — deterministic packaging, SBOM, vulnerability, provenance and signing policy;
+- `bin/ew` — executable bootstrap, adoption, diagnosis, rollback and self-test layer;
 - `templates/` — reusable product, decision, work and operational records;
 - `platform/`, `policy/`, `open-source/` — verified enforcement adapters;
 - `scripts/`, `tests/`, `.github/` — automated enforcement.
 
 ## Current state
 
-The v0.1 foundation, v0.2-v0.5 assurance/control layers and v0.6 supply-chain assurance are integrated into `main`. Constitutional governance and the primary invariant are being re-integrated against the current mainline in a dedicated review branch replacing the diverged PR #8 baseline. The executable `ew` CLI remains separately reviewed in stacked PR #9 and PR #10.
+The v0.1 foundation, v0.2-v0.5 assurance/control layers and v0.6 supply-chain assurance are integrated into `main`. Draft PR #11 provides the verified constitutional-governance mainline integration. This stacked v0.9.1 release candidate integrates the previously reviewed CLI bootstrap and adoption slices on top of PR #11 without merging the diverged PR #8 branch.
 
-The system is not yet `WORLD_CLASS_READY`. Named authorities, license/IP acceptance, real new/existing-project pilots, CLI consolidation, signed main/tag evidence and independent assessment remain required.
+The system is not yet `WORLD_CLASS_READY`. Named authorities, license/IP acceptance, real new/existing-project pilots, upgrade and semantic migration support, signed main/tag evidence and independent assessment remain required.
 
 ## Language policy
 
