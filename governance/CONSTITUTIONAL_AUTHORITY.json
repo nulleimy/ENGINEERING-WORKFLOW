@@ -29,7 +29,7 @@
   ],
   "primary_engineering_invariant": {
     "path": "governance/PRIMARY_ENGINEERING_INVARIANT.json",
-    "sha256": "2e52501767e09b941a1f35d549cd95d802076665e76de909bb27c25603c85588",
+    "sha256": "b07005ab0813e581da87a44680fc1bb7229ae31fbbd8eca1ff6b6b25773d9a9e",
     "exact_content_required": true
   },
   "conflict_resolution": {
