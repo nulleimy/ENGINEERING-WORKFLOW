@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "id": "EW-EV-PR11-FINAL-CI",
+  "status": "VERIFIED",
+  "pull_request": 11,
+  "head_sha": "47f02ebf5f76f3a349d8bd90dc2f39590796b5c2",
+  "mergeable": true,
+  "workflows": {
+    "quality": {"run_id": 30188669109, "run_number": 67, "conclusion": "success"},
+    "policy": {"run_id": 30188669074, "run_number": 56, "conclusion": "success"},
+    "supply_chain": {"run_id": 30188669099, "run_number": 8, "conclusion": "success", "signing_job": "skipped-as-required-for-pull-request"},
+    "constitutional": {"run_id": 30188669093, "run_number": 3, "conclusion": "success"}
+  },
+  "supply_chain_artifact": {
+    "artifact_id": 8627812869,
+    "name": "supply-chain-evidence-39ea4e45339c2d94ea855609e20d979953119a65",
+    "digest": "sha256:8a01367a59070e5eb61ecc77c0ed2b340f272269323eaff9b50e407448032e78",
+    "expires_at": "2026-08-25T05:01:15Z"
+  },
+  "claims": {
+    "main_changed": false,
+    "merge_performed": false,
+    "release_performed": false,
+    "independent_human_review_complete": false,
+    "ready_to_leave_draft": false
+  }
+}
