@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Manual work register",
+  "type": "object",
+  "required": ["schema_version", "status", "automation_candidate_threshold", "allowed_states", "entries"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "status": {"enum": ["current", "archived"]},
+    "automation_candidate_threshold": {"type": "object"},
+    "allowed_states": {"type": "array", "minItems": 7, "uniqueItems": true},
+    "entries": {"type": "array"}
+  },
+  "additionalProperties": true
+}
