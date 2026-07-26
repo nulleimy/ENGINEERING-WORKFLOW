@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Lifecycle evidence graph",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "status",
+    "required_node_types",
+    "required_forward_chain",
+    "conditional_edges",
+    "node_requirements",
+    "rules",
+    "nodes",
+    "edges"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "status": {"enum": ["proposed", "current", "archived"]},
+    "required_node_types": {"type": "array", "minItems": 12, "uniqueItems": true},
+    "required_forward_chain": {"type": "array", "minItems": 6, "uniqueItems": true},
+    "conditional_edges": {"type": "array", "minItems": 6, "uniqueItems": true},
+    "node_requirements": {"type": "array", "minItems": 7, "uniqueItems": true},
+    "rules": {"type": "object"},
+    "nodes": {"type": "array"},
+    "edges": {"type": "array"}
+  },
+  "additionalProperties": true
+}
