@@ -23,10 +23,15 @@
       "id": "EW-PDRE-CONSTITUTION-001",
       "path": "governance/PRODUCT_DECISION_EXECUTION_CONSTITUTION.md",
       "role": "product-decision-execution-constitution",
-      "sha256": "1ce56fcd03ede8e0f3e221dd680ae3521e9fddd6c7cbbdb0b9f35f2362588d9e",
+      "sha256": "be1f411de132280c2588328cffd76ee76053e4382b36b48d7c5ca7edd5deb719",
       "exact_content_required": true
     }
   ],
+  "primary_engineering_invariant": {
+    "path": "governance/PRIMARY_ENGINEERING_INVARIANT.json",
+    "sha256": "2e52501767e09b941a1f35d549cd95d802076665e76de909bb27c25603c85588",
+    "exact_content_required": true
+  },
   "conflict_resolution": {
     "primary": "higher-authority-wins",
     "same_authority": "safer-and-more-evidence-demanding-requirement-wins",
