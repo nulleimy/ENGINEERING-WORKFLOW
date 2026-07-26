@@ -58,8 +58,6 @@ def validate_links(path: Path, text: str, errors: list[str]) -> None:
         if not target or target.startswith(("#", "mailto:")):
             continue
         parsed = urlparse(target)
-        if parsed.scheme in {"http", "https"}:
-            continue
         if parsed.scheme:
             continue
         resolved = (path.parent / target).resolve()
@@ -74,7 +72,6 @@ def validate_links(path: Path, text: str, errors: list[str]) -> None:
 
 def main() -> int:
     errors: list[str] = []
-
     required = json.loads((ROOT / "config/required-paths.json").read_text(encoding="utf-8"))["required_paths"]
     for rel in required:
         if not (ROOT / rel).is_file():
@@ -97,14 +94,13 @@ def main() -> int:
         text = path.read_text(encoding="utf-8")
         if not text.strip():
             error(errors, f"{path.relative_to(ROOT)}: empty document")
-        if path.parts[-2:-1] and path.relative_to(ROOT).parts[0] in FRONT_MATTER_REQUIRED:
-            if path.name != "WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md":
-                meta = parse_front_matter(path, text, errors)
-                doc_id = meta.get("id")
-                if doc_id:
-                    if doc_id in ids:
-                        error(errors, f"duplicate document id {doc_id}: {ids[doc_id].relative_to(ROOT)} and {path.relative_to(ROOT)}")
-                    ids[doc_id] = path
+        if path.relative_to(ROOT).parts[0] in FRONT_MATTER_REQUIRED and path.name != "WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md":
+            meta = parse_front_matter(path, text, errors)
+            doc_id = meta.get("id")
+            if doc_id:
+                if doc_id in ids:
+                    error(errors, f"duplicate document id {doc_id}: {ids[doc_id].relative_to(ROOT)} and {path.relative_to(ROOT)}")
+                ids[doc_id] = path
         validate_links(path, text, errors)
         for pattern in SECRET_PATTERNS:
             if pattern.search(text):
@@ -119,6 +115,11 @@ def main() -> int:
         "product_decision_execution_constitution",
         "constitutional_authority",
         "constitutional_compatibility_report",
+        "primary_engineering_invariant",
+        "complexity_budget",
+        "reversibility_classes",
+        "manual_work_register",
+        "lifecycle_evidence_graph",
     ):
         rel = control.get("control", {}).get(key)
         if not rel or not (ROOT / rel).is_file():
@@ -129,7 +130,6 @@ def main() -> int:
         for item in errors:
             print(f"ERROR: {item}")
         return 1
-
     print("VALIDATION=PASSED")
     print(f"VERSION={version}")
     print(f"REQUIRED_FILES={len(required)}")
