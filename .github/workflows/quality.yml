@@ -32,6 +32,9 @@ jobs:
       - name: Validate constitutional authority and exact content
         run: python3 scripts/validate_constitutions.py
 
+      - name: Validate primary engineering invariant
+        run: python3 scripts/validate_primary_invariant.py
+
       - name: Validate controls, profiles and open-source catalog
         run: python3 scripts/validate_control_catalog.py
 
