@@ -20,81 +20,141 @@ SECRET_PATTERNS = [
     re.compile(r"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}\b"),
 ]
 
-def error(errors: list[str], message: str) -> None: errors.append(message)
+
+def error(errors: list[str], message: str) -> None:
+    errors.append(message)
+
 
 def parse_front_matter(path: Path, text: str, errors: list[str]) -> dict[str, str]:
     if not text.startswith("---\n"):
-        error(errors, f"{path.relative_to(ROOT)}: missing front matter"); return {}
+        error(errors, f"{path.relative_to(ROOT)}: missing front matter")
+        return {}
     end = text.find("\n---\n", 4)
     if end == -1:
-        error(errors, f"{path.relative_to(ROOT)}: unterminated front matter"); return {}
-    values = {}
+        error(errors, f"{path.relative_to(ROOT)}: unterminated front matter")
+        return {}
+    values: dict[str, str] = {}
     for line in text[4:end].splitlines():
-        if not line.strip() or line.lstrip().startswith("#"): continue
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
         if ":" not in line:
-            error(errors, f"{path.relative_to(ROOT)}: invalid front matter line: {line}"); continue
-        key, value = line.split(":", 1); values[key.strip()] = value.strip()
+            error(errors, f"{path.relative_to(ROOT)}: invalid front matter line: {line}")
+            continue
+        key, value = line.split(":", 1)
+        values[key.strip()] = value.strip()
     missing = sorted(FRONT_FIELDS - values.keys())
-    if missing: error(errors, f"{path.relative_to(ROOT)}: missing metadata fields: {', '.join(missing)}")
-    if values.get("status") and values["status"] not in ALLOWED_STATUS: error(errors, f"{path.relative_to(ROOT)}: unsupported status {values['status']!r}")
-    if values.get("version") and not SEMVER.match(values["version"]): error(errors, f"{path.relative_to(ROOT)}: invalid document version {values['version']!r}")
+    if missing:
+        error(errors, f"{path.relative_to(ROOT)}: missing metadata fields: {', '.join(missing)}")
+    if values.get("status") and values["status"] not in ALLOWED_STATUS:
+        error(errors, f"{path.relative_to(ROOT)}: unsupported status {values['status']!r}")
+    if values.get("version") and not SEMVER.match(values["version"]):
+        error(errors, f"{path.relative_to(ROOT)}: invalid document version {values['version']!r}")
     return values
+
 
 def validate_links(path: Path, text: str, errors: list[str]) -> None:
     for target in LINK.findall(text):
         target = target.strip().split("#", 1)[0]
-        if not target or target.startswith(("#", "mailto:")): continue
-        if urlparse(target).scheme: continue
+        if not target or target.startswith(("#", "mailto:")):
+            continue
+        if urlparse(target).scheme:
+            continue
         resolved = (path.parent / target).resolve()
-        try: resolved.relative_to(ROOT.resolve())
+        try:
+            resolved.relative_to(ROOT.resolve())
         except ValueError:
-            error(errors, f"{path.relative_to(ROOT)}: link escapes repository: {target}"); continue
-        if not resolved.exists(): error(errors, f"{path.relative_to(ROOT)}: broken relative link: {target}")
+            error(errors, f"{path.relative_to(ROOT)}: link escapes repository: {target}")
+            continue
+        if not resolved.exists():
+            error(errors, f"{path.relative_to(ROOT)}: broken relative link: {target}")
+
 
 def main() -> int:
-    errors = []
+    errors: list[str] = []
     required = json.loads((ROOT / "config/required-paths.json").read_text(encoding="utf-8"))["required_paths"]
-    for rel in required:
-        if not (ROOT / rel).is_file(): error(errors, f"missing required file: {rel}")
+    for relative in required:
+        if not (ROOT / relative).is_file():
+            error(errors, f"missing required file: {relative}")
+
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    if not SEMVER.match(version): error(errors, f"VERSION is not valid SemVer: {version!r}")
+    if not SEMVER.match(version):
+        error(errors, f"VERSION is not valid SemVer: {version!r}")
+
     for json_path in ROOT.rglob("*.json"):
-        try: json.loads(json_path.read_text(encoding="utf-8"))
-        except Exception as exc: error(errors, f"{json_path.relative_to(ROOT)}: invalid JSON: {exc}")
-    ids = {}
+        try:
+            json.loads(json_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            error(errors, f"{json_path.relative_to(ROOT)}: invalid JSON: {exc}")
+
+    document_ids: dict[str, Path] = {}
     for path in ROOT.rglob("*.md"):
-        if ".git" in path.parts: continue
+        if ".git" in path.parts:
+            continue
         text = path.read_text(encoding="utf-8")
-        if not text.strip(): error(errors, f"{path.relative_to(ROOT)}: empty document")
+        if not text.strip():
+            error(errors, f"{path.relative_to(ROOT)}: empty document")
         if path.relative_to(ROOT).parts[0] in FRONT_MATTER_REQUIRED and path.name != "WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md":
-            meta = parse_front_matter(path, text, errors); doc_id = meta.get("id")
-            if doc_id:
-                if doc_id in ids: error(errors, f"duplicate document id {doc_id}: {ids[doc_id].relative_to(ROOT)} and {path.relative_to(ROOT)}")
-                ids[doc_id] = path
+            metadata = parse_front_matter(path, text, errors)
+            document_id = metadata.get("id")
+            if document_id:
+                if document_id in document_ids:
+                    error(errors, f"duplicate document id {document_id}: {document_ids[document_id].relative_to(ROOT)} and {path.relative_to(ROOT)}")
+                document_ids[document_id] = path
         validate_links(path, text, errors)
         for pattern in SECRET_PATTERNS:
-            if pattern.search(text): error(errors, f"{path.relative_to(ROOT)}: possible secret/private key pattern")
+            if pattern.search(text):
+                error(errors, f"{path.relative_to(ROOT)}: possible secret/private key pattern")
+
     control = json.loads((ROOT / "project-control.json").read_text(encoding="utf-8"))
-    if control.get("control", {}).get("version") != version: error(errors, "project-control.json version does not match VERSION")
-    for key in ("governance_file", "technical_operating_mode", "product_decision_execution_constitution", "constitutional_authority", "constitutional_compatibility_report", "primary_engineering_invariant", "complexity_budget", "reversibility_classes", "manual_work_register", "lifecycle_evidence_graph"):
-        rel = control.get("control", {}).get(key)
-        if not rel or not (ROOT / rel).is_file(): error(errors, f"project-control.json references missing {key}: {rel!r}")
+    if control.get("control", {}).get("version") != version:
+        error(errors, "project-control.json version does not match VERSION")
+    for key in (
+        "governance_file", "technical_operating_mode", "product_decision_execution_constitution",
+        "constitutional_authority", "constitutional_compatibility_report", "primary_engineering_invariant",
+        "complexity_budget", "reversibility_classes", "manual_work_register", "lifecycle_evidence_graph",
+    ):
+        relative = control.get("control", {}).get(key)
+        if not relative or not (ROOT / relative).is_file():
+            error(errors, f"project-control.json references missing {key}: {relative!r}")
+
     cli = control.get("cli", {})
-    expected = {"entrypoint":"bin/ew", "foundation_document":"platform/EW_CLI_FOUNDATION.md", "commands":["init","doctor","self-test"], "git_required":False, "external_runtime_dependencies":[]}
-    for key, value in expected.items():
-        if cli.get(key) != value: error(errors, f"project-control.json cli.{key} must equal {value!r}")
-    for key in ("entrypoint", "foundation_document"):
-        rel = cli.get(key)
-        if not rel or not (ROOT / rel).is_file(): error(errors, f"project-control.json references missing cli.{key}: {rel!r}")
+    expected_cli = {
+        "version": "0.2.0",
+        "entrypoint": "bin/ew",
+        "foundation_document": "platform/EW_CLI_FOUNDATION.md",
+        "adoption_document": "platform/EW_ADOPT_FOUNDATION.md",
+        "commands": ["init", "adopt", "doctor", "rollback", "self-test"],
+        "git_required": False,
+        "external_runtime_dependencies": [],
+    }
+    for key, value in expected_cli.items():
+        if cli.get(key) != value:
+            error(errors, f"project-control.json cli.{key} must equal {value!r}")
+    for key in ("entrypoint", "foundation_document", "adoption_document"):
+        relative = cli.get(key)
+        if not relative or not (ROOT / relative).is_file():
+            error(errors, f"project-control.json references missing cli.{key}: {relative!r}")
+    entrypoint = ROOT / str(cli.get("entrypoint", ""))
+    if entrypoint.is_file():
+        text = entrypoint.read_text(encoding="utf-8")
+        if 'CLI_VERSION = "0.2.0"' not in text:
+            error(errors, "bin/ew CLI_VERSION does not match project-control.json")
+        for command in expected_cli["commands"]:
+            if f'add_parser("{command}")' not in text:
+                error(errors, f"bin/ew does not register required command: {command}")
+
     if errors:
         print("VALIDATION=FAILED")
-        for item in errors: print(f"ERROR: {item}")
+        for item in errors:
+            print(f"ERROR: {item}")
         return 1
     print("VALIDATION=PASSED")
     print(f"VERSION={version}")
     print(f"REQUIRED_FILES={len(required)}")
-    print(f"CONTROLLED_DOCUMENT_IDS={len(ids)}")
-    print(f"CLI_COMMANDS={len(expected['commands'])}")
+    print(f"CONTROLLED_DOCUMENT_IDS={len(document_ids)}")
+    print(f"CLI_COMMANDS={len(expected_cli['commands'])}")
     return 0
 
-if __name__ == "__main__": sys.exit(main())
+
+if __name__ == "__main__":
+    sys.exit(main())
