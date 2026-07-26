@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Primary engineering invariant",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "status",
+    "id",
+    "constitution_path",
+    "constitution_sha256",
+    "required_properties",
+    "non_exceptable_boundaries",
+    "supporting_controls"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "status": {"enum": ["proposed", "accepted", "deprecated"]},
+    "id": {"const": "EW-GOV-PRIMARY-001"},
+    "constitution_path": {"type": "string"},
+    "constitution_sha256": {"pattern": "^[0-9a-f]{64}$"},
+    "required_properties": {"type": "array", "minItems": 7, "maxItems": 7, "uniqueItems": true},
+    "non_exceptable_boundaries": {"type": "array", "minItems": 4, "uniqueItems": true},
+    "supporting_controls": {"type": "object"}
+  },
+  "additionalProperties": true
+}
