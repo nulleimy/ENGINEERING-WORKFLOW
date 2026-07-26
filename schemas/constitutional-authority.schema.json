@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nulleimy/ENGINEERING-WORKFLOW/schemas/constitutional-authority.schema.json",
+  "title": "ENGINEERING-WORKFLOW constitutional authority index",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "status",
+    "authority_order",
+    "documents",
+    "conflict_resolution",
+    "protected_operations_require_explicit_operator_authorization"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "status": {
+      "enum": [
+        "proposed",
+        "accepted",
+        "deprecated",
+        "superseded"
+      ]
+    },
+    "authority_order": {
+      "type": "array",
+      "minItems": 7,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "documents": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "path",
+          "role",
+          "sha256",
+          "exact_content_required"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "enum": [
+              "canonical-technical-constitution",
+              "product-decision-execution-constitution"
+            ]
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "exact_content_required": {
+            "const": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "conflict_resolution": {
+      "type": "object",
+      "required": [
+        "primary",
+        "same_authority",
+        "unresolved"
+      ],
+      "properties": {
+        "unresolved": {
+          "const": "BLOCKED"
+        }
+      },
+      "additionalProperties": true
+    },
+    "protected_operations_require_explicit_operator_authorization": {
+      "type": "array",
+      "minItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -12,12 +12,16 @@
     "version": "0.1.0",
     "canonical_repository": "https://github.com/nulleimy/ENGINEERING-WORKFLOW",
     "default_branch": "main",
-    "normative_language": "en",
+    "normative_language": "en-with-canonical-czech-constitutions",
     "governance_file": "governance/ENGINEERING_CONSTITUTION.md",
-    "technical_operating_mode": "governance/WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md"
+    "technical_operating_mode": "governance/WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md",
+    "product_decision_execution_constitution": "governance/PRODUCT_DECISION_EXECUTION_CONSTITUTION.md",
+    "constitutional_authority": "governance/CONSTITUTIONAL_AUTHORITY.json",
+    "constitutional_compatibility_report": "governance/CONSTITUTIONAL_COMPATIBILITY_REPORT.md"
   },
   "quality": {
     "validator": "python3 scripts/validate_repository.py",
+    "constitutional_validator": "python3 scripts/validate_constitutions.py",
     "tests": "python3 -m unittest discover -s tests -v",
     "release_requires_clean_validation": true
   }

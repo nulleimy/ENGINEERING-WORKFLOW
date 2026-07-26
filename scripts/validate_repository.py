@@ -113,7 +113,13 @@ def main() -> int:
     control = json.loads((ROOT / "project-control.json").read_text(encoding="utf-8"))
     if control.get("control", {}).get("version") != version:
         error(errors, "project-control.json version does not match VERSION")
-    for key in ("governance_file", "technical_operating_mode"):
+    for key in (
+        "governance_file",
+        "technical_operating_mode",
+        "product_decision_execution_constitution",
+        "constitutional_authority",
+        "constitutional_compatibility_report",
+    ):
         rel = control.get("control", {}).get(key)
         if not rel or not (ROOT / rel).is_file():
             error(errors, f"project-control.json references missing {key}: {rel!r}")

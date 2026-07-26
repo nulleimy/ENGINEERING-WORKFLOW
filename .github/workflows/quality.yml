@@ -29,6 +29,9 @@ jobs:
       - name: Validate controlled repository structure
         run: python3 scripts/validate_repository.py
 
+      - name: Validate constitutional authority and exact content
+        run: python3 scripts/validate_constitutions.py
+
       - name: Validate controls, profiles and open-source catalog
         run: python3 scripts/validate_control_catalog.py
 

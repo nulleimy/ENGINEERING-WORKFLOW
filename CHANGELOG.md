@@ -3,8 +3,8 @@ id: EW-CHANGELOG
 title: Changelog
 status: current
 owner: Eimy Herrer and Johny
-version: 0.1.0
-last-reviewed: 2026-07-24
+version: 0.7.0-rc.1
+last-reviewed: 2026-07-26
 ---
 
 # Changelog
@@ -12,6 +12,15 @@ last-reviewed: 2026-07-24
 All notable changes are recorded here. Versions follow Semantic Versioning.
 
 ## [Unreleased]
+
+### Added
+
+- Product, Decision and Execution Constitution bound to the exact technical constitution hash;
+- machine-readable constitutional authority order and protected-operation boundary;
+- constitutional compatibility report, schema, validator and negative regression tests;
+- Product Definition, Decision Record and Authority Assignment templates.
+
+### Planned
 
 - repository rulesets and branch protection;
 - project scaffolding CLI;

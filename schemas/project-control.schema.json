@@ -63,16 +63,77 @@
         "default_branch",
         "normative_language",
         "governance_file",
-        "technical_operating_mode"
-      ]
+        "technical_operating_mode",
+        "product_decision_execution_constitution",
+        "constitutional_authority",
+        "constitutional_compatibility_report"
+      ],
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "canonical_repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "default_branch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "normative_language": {
+          "type": "string",
+          "minLength": 1
+        },
+        "governance_file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "technical_operating_mode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "product_decision_execution_constitution": {
+          "type": "string",
+          "minLength": 1
+        },
+        "constitutional_authority": {
+          "type": "string",
+          "minLength": 1
+        },
+        "constitutional_compatibility_report": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
     },
     "quality": {
       "type": "object",
       "required": [
         "validator",
+        "constitutional_validator",
         "tests",
         "release_requires_clean_validation"
-      ]
+      ],
+      "properties": {
+        "validator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "constitutional_validator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tests": {
+          "type": "string",
+          "minLength": 1
+        },
+        "release_requires_clean_validation": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
     }
   },
   "additionalProperties": true
