@@ -3,7 +3,7 @@ id: EW-CHANGELOG
 title: Changelog
 status: current
 owner: Eimy Herrer and Johny
-version: 0.7.0-rc.2
+version: 0.9.1-rc.1
 last-reviewed: 2026-07-26
 ---
 
@@ -24,12 +24,21 @@ All notable changes are recorded here. Versions follow Semantic Versioning.
 - manual-work register and lifecycle evidence graph beyond Git history;
 - constitutional and primary-invariant validators with negative regression tests;
 - Product Definition, Decision Record, Authority Assignment and Manual Work templates;
-- independent constitutional CI gate alongside quality, policy and supply-chain gates.
+- independent constitutional CI gate alongside quality, policy and supply-chain gates;
+- dependency-free `ew init`, `ew doctor` and `ew self-test` foundation;
+- atomic controlled-directory generation, manifest integrity and profile downgrade protection;
+- preview-first `ew adopt` for existing projects;
+- bounded read-only inventory, technology detection and source fingerprinting;
+- sensitive-path content redaction and explicit acknowledgement gate;
+- pre-adoption evidence snapshot and no-source-change proof;
+- preview-first `ew rollback` limited to manifest-owned bootstrap state;
+- CLI schemas, documentation and negative regression tests.
 
 ### Planned
 
 - repository rulesets and branch protection;
-- project scaffolding CLI and adoption automation;
+- semantic project migration and upgrade automation;
+- language and deployment golden paths;
 - reusable deployment adapters;
 - compliance evidence generation;
 - successful signed main/tag evidence execution;
