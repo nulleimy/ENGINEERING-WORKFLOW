@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0.0",
+  "id": "EW-EV-PR8-MAINLINE-INTEGRATION",
+  "status": "PR_VERIFIED_AWAITING_INDEPENDENT_REVIEW",
+  "source_pr": 8,
+  "source_head": "11b0762d02325de2baa8526afd92613aee710c2b",
+  "main_baseline": "b4771d06850d1d76e5aab51f12eb24e267cf5666",
+  "integration_pr": 11,
+  "integration_branch": "integration/pr8-governance-on-main-v0.7.1",
+  "strategy": "rebuild-on-current-main-preserving-supply-chain",
+  "verified_head_before_evidence_update": "353e07959fbb63256fba78d3adccbbb567d04b77",
+  "workflow_evidence": {
+    "quality": {
+      "run_id": 30188498796,
+      "run_number": 65,
+      "conclusion": "success"
+    },
+    "policy": {
+      "run_id": 30188498843,
+      "run_number": 54,
+      "conclusion": "success"
+    },
+    "supply_chain": {
+      "run_id": 30188498836,
+      "run_number": 6,
+      "conclusion": "success",
+      "pr_signing_job": "skipped-as-required"
+    },
+    "constitutional": {
+      "run_id": 30188498830,
+      "run_number": 1,
+      "conclusion": "success"
+    }
+  },
+  "preserved_controls": [
+    "quality",
+    "policy",
+    "supply-chain",
+    "deterministic-artifact",
+    "cyclonedx-sbom",
+    "vulnerability-gate",
+    "provenance-signing-workflow"
+  ],
+  "integrated_controls": [
+    "constitutional-authority",
+    "product-decision-execution-constitution",
+    "primary-engineering-invariant",
+    "complexity-budget",
+    "reversibility-classes",
+    "manual-work-register",
+    "lifecycle-evidence-graph"
+  ],
+  "verified_claims": [
+    "repository validation passed",
+    "control profile assurance readiness and toolchain validation passed",
+    "supply-chain artifact SBOM vulnerability and evidence pipeline passed",
+    "constitutional exact-content and primary-invariant validation passed",
+    "constitutional negative regression tests passed",
+    "pull-request signing authority remained disabled"
+  ],
+  "claims": {
+    "main_changed": false,
+    "source_pr_changed": false,
+    "merge_performed": false,
+    "ci_verified_on_recorded_head": true,
+    "final_head_requires_recheck_after_evidence_update": true,
+    "independent_review_complete": false,
+    "constitutions_accepted": false
+  }
+}

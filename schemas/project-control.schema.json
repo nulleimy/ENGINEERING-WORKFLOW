@@ -3,55 +3,20 @@
   "$id": "https://github.com/nulleimy/ENGINEERING-WORKFLOW/schemas/project-control.schema.json",
   "title": "ENGINEERING-WORKFLOW project control",
   "type": "object",
-  "required": [
-    "schema_version",
-    "project",
-    "control",
-    "quality"
-  ],
+  "required": ["schema_version", "project", "control", "quality"],
   "properties": {
-    "schema_version": {
-      "const": 1
-    },
+    "schema_version": {"const": 1},
     "project": {
       "type": "object",
-      "required": [
-        "id",
-        "name",
-        "status",
-        "product_owner",
-        "technical_owner"
-      ],
+      "required": ["id", "name", "status", "product_owner", "technical_owner"],
       "properties": {
-        "id": {
-          "type": "string",
-          "minLength": 1
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1
-        },
+        "id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
         "status": {
-          "enum": [
-            "concept",
-            "discovery",
-            "defined",
-            "building",
-            "validating",
-            "operating",
-            "maintenance",
-            "retired",
-            "archived"
-          ]
+          "enum": ["concept", "discovery", "defined", "building", "validating", "operating", "maintenance", "retired", "archived"]
         },
-        "product_owner": {
-          "type": "string",
-          "minLength": 1
-        },
-        "technical_owner": {
-          "type": "string",
-          "minLength": 1
-        }
+        "product_owner": {"type": "string", "minLength": 1},
+        "technical_owner": {"type": "string", "minLength": 1}
       },
       "additionalProperties": true
     },
@@ -63,16 +28,29 @@
         "default_branch",
         "normative_language",
         "governance_file",
-        "technical_operating_mode"
-      ]
+        "technical_operating_mode",
+        "product_decision_execution_constitution",
+        "constitutional_authority",
+        "constitutional_compatibility_report",
+        "primary_engineering_invariant",
+        "complexity_budget",
+        "reversibility_classes",
+        "manual_work_register",
+        "lifecycle_evidence_graph"
+      ],
+      "additionalProperties": true
     },
     "quality": {
       "type": "object",
       "required": [
         "validator",
+        "constitutional_validator",
+        "primary_invariant_validator",
+        "supply_chain_validator",
         "tests",
         "release_requires_clean_validation"
-      ]
+      ],
+      "additionalProperties": true
     }
   },
   "additionalProperties": true

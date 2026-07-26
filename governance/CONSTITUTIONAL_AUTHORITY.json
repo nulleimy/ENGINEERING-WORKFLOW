@@ -1,0 +1,52 @@
+{
+  "$schema": "../schemas/constitutional-authority.schema.json",
+  "schema_version": "1.0.0",
+  "status": "proposed",
+  "authority_order": [
+    "applicable-law-security-platform-rules",
+    "governance/WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md",
+    "governance/PRODUCT_DECISION_EXECUTION_CONSTITUTION.md",
+    "explicit-authorized-operator-mandate",
+    "project-governance-and-approved-records",
+    "working-documentation-and-tool-configuration",
+    "undocumented-assumptions"
+  ],
+  "documents": [
+    {
+      "id": "EW-TECH-CONSTITUTION-001",
+      "path": "governance/WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md",
+      "role": "canonical-technical-constitution",
+      "sha256": "ed44c6147049887d941b7497f1bce3b817f22b6ae00a5136a27365a2f688d918",
+      "exact_content_required": true
+    },
+    {
+      "id": "EW-PDRE-CONSTITUTION-001",
+      "path": "governance/PRODUCT_DECISION_EXECUTION_CONSTITUTION.md",
+      "role": "product-decision-execution-constitution",
+      "sha256": "be1f411de132280c2588328cffd76ee76053e4382b36b48d7c5ca7edd5deb719",
+      "exact_content_required": true
+    }
+  ],
+  "primary_engineering_invariant": {
+    "path": "governance/PRIMARY_ENGINEERING_INVARIANT.json",
+    "sha256": "b07005ab0813e581da87a44680fc1bb7229ae31fbbd8eca1ff6b6b25773d9a9e",
+    "exact_content_required": true
+  },
+  "conflict_resolution": {
+    "primary": "higher-authority-wins",
+    "same_authority": "safer-and-more-evidence-demanding-requirement-wins",
+    "unresolved": "BLOCKED"
+  },
+  "protected_operations_require_explicit_operator_authorization": [
+    "file-deletion",
+    "git-history-rewrite",
+    "force-push",
+    "production-infrastructure-change",
+    "production-data-migration",
+    "secret-rotation",
+    "license-change",
+    "branch-merge",
+    "release",
+    "public-api-change"
+  ]
+}

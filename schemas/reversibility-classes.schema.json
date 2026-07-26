@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Reversibility classes",
+  "type": "object",
+  "required": ["schema_version", "status", "classes", "rules"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "status": {"enum": ["proposed", "accepted"]},
+    "classes": {"type": "array", "minItems": 5, "maxItems": 5},
+    "rules": {"type": "object"}
+  },
+  "additionalProperties": true
+}

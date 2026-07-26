@@ -1,0 +1,17 @@
+{
+  "$schema": "../schemas/reversibility-classes.schema.json",
+  "schema_version": "1.0.0",
+  "status": "proposed",
+  "classes": [
+    {"id": "REV-0", "name": "Immediately reversible", "minimum_lane": "R0", "required_evidence": ["change-record"]},
+    {"id": "REV-1", "name": "Automated rollback", "minimum_lane": "R1", "required_evidence": ["rollback-command", "rollback-test"]},
+    {"id": "REV-2", "name": "Controlled migration rollback", "minimum_lane": "R2", "required_evidence": ["migration-plan", "backup-or-snapshot", "rollback-rehearsal"]},
+    {"id": "REV-3", "name": "Safe-forward only", "minimum_lane": "R3", "required_evidence": ["safe-forward-plan", "independent-review", "incident-readiness", "operator-authorization"]},
+    {"id": "REV-4", "name": "Potentially irreversible", "minimum_lane": "R3", "required_evidence": ["D1-or-D0-decision", "independent-review", "rehearsal-or-simulation", "explicit-risk-acceptance", "operator-authorization"]}
+  ],
+  "rules": {
+    "default_class": "REV-1",
+    "REV-3-and-REV-4-require-independent-acceptance": true,
+    "missing-class": "BLOCKED"
+  }
+}

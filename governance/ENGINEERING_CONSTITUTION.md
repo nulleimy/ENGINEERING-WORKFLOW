@@ -3,13 +3,20 @@ id: EW-GOV-001
 title: Engineering Constitution
 status: proposed
 owner: Eimy Herrer and Johny
-version: 0.1.0
-last-reviewed: 2026-07-24
+version: 0.7.0-rc.1
+last-reviewed: 2026-07-26
 ---
 
 # Engineering Constitution
 
-This constitution defines the non-negotiable invariants of the engineering system. Procedures and tools may change; these invariants may only change through explicit joint approval and a versioned governance decision.
+This constitution defines the concise non-negotiable invariants of the engineering system. It is subordinate to the exact canonical technical operating mode and the Product, Decision and Execution Constitution. Procedures and tools may change; constitutional meaning changes only through explicit approval and a versioned governance decision.
+
+## Constitutional relationship
+
+- `WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md` governs technical truth, technical work modes, protected operations and technical Definition of Done.
+- `PRODUCT_DECISION_EXECUTION_CONSTITUTION.md` governs product value, decision classes, realization discipline and readiness beyond code completion.
+- `CONSTITUTIONAL_AUTHORITY.json` binds both documents to exact hashes and defines fail-closed conflict handling.
+- This document provides the concise project-level invariant summary and may not weaken either higher constitution.
 
 ## Invariants
 
@@ -28,23 +35,28 @@ This constitution defines the non-negotiable invariants of the engineering syste
 13. **Tools are adapters.** Git, GitHub, Drive, CI platforms, cloud providers and AI models can be replaced without redefining the operating model.
 14. **No hidden production state.** Manual emergency changes must be captured, reviewed and reconciled into the canonical state.
 15. **No unauthorized reuse.** Code, data, models, designs and documents retain explicit provenance, license and ownership.
-16. **Continuous improvement targets constraints.** Metrics are used to remove bottlenecks and rework, never to rank people or reward activity volume.
+16. **Continuous improvement targets constraints.** Metrics remove bottlenecks and rework; they do not rank people or reward activity volume.
+17. **No protected operation without explicit authority.** A decision record does not itself authorize merge, release, license change, destructive action or production change.
 
 ## Authority order
 
-1. law, safety and binding contractual obligations;
-2. this constitution and approved project constitution;
-3. accepted security and compliance controls;
-4. current authorized work package;
-5. project documentation;
-6. tool defaults and personal preference.
+1. law, safety, binding contractual and platform obligations;
+2. `WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md`;
+3. `PRODUCT_DECISION_EXECUTION_CONSTITUTION.md`;
+4. explicit authorized operator mandate;
+5. this constitution and accepted project governance records;
+6. current authorized Work Package and accepted decision records;
+7. working documentation, tool defaults and personal preference.
+
+An unresolved conflict is `BLOCKED`. At equal authority the safer and more evidence-demanding applicable requirement wins.
 
 ## Amendment
 
 A constitutional amendment requires:
 
 - an ADR describing the deficiency and alternatives;
-- impact and migration analysis;
-- approval by Eimy and Johny;
+- impact, compatibility and migration analysis;
+- explicit approval by Eimy and Johny or their formally assigned successor authorities;
 - a major or minor version change according to compatibility impact;
+- updated integrity hashes and authority index when constitutional content changes;
 - a recorded adoption plan for affected projects.

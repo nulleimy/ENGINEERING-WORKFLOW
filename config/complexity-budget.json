@@ -1,0 +1,31 @@
+{
+  "$schema": "../schemas/complexity-budget.schema.json",
+  "schema_version": "1.0.0",
+  "status": "proposed",
+  "dimensions": [
+    {"id": "new-runtime-services", "unit": "count", "default_limit": 0},
+    {"id": "new-direct-dependencies", "unit": "count", "default_limit": 2},
+    {"id": "new-trust-boundaries", "unit": "count", "default_limit": 0},
+    {"id": "new-external-data-flows", "unit": "count", "default_limit": 0},
+    {"id": "new-manual-steps", "unit": "count", "default_limit": 0},
+    {"id": "new-persistent-state-stores", "unit": "count", "default_limit": 0},
+    {"id": "estimated-monthly-maintenance-hours", "unit": "hours", "default_limit": 2}
+  ],
+  "exceeding_requires": [
+    "decision-record",
+    "named-owner",
+    "measured-benefit",
+    "security-review",
+    "removal-or-exit-plan",
+    "expiry-or-review-trigger"
+  ],
+  "automatic_escalation": [
+    "new-runtime-service",
+    "new-trust-boundary",
+    "new-external-data-flow",
+    "new-persistent-state-store",
+    "REV-3",
+    "REV-4"
+  ],
+  "evaluation_result_states": ["WITHIN_BUDGET", "EXCEEDED_ACCEPTED", "BLOCKED"]
+}

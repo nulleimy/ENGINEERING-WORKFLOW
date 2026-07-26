@@ -3,64 +3,68 @@ id: EW-README
 title: ENGINEERING-WORKFLOW
 status: current
 owner: Eimy Herrer and Johny
-version: 0.1.0
-last-reviewed: 2026-07-24
+version: 0.7.0-rc.2
+last-reviewed: 2026-07-26
 ---
 
 # ENGINEERING-WORKFLOW
 
-**ENGINEERING-WORKFLOW** is a portable, AI-native engineering operating system for creating, changing, verifying, releasing, operating, and retiring software products at a consistently high standard.
+**ENGINEERING-WORKFLOW** is a portable, AI-native engineering operating system for creating, changing, verifying, releasing, operating and retiring software products at a consistently high standard.
 
-It is designed for Eimy and Johny, but its control model is deliberately independent of Git, GitHub, a specific cloud, programming language, or AI provider.
+## Primary engineering invariant
 
-## What this repository provides
+> Product cleanliness + Unix simplicity + DevOps automation + SRE reliability + zero-trust security + lifecycle-wide auditability.
 
-- a concise engineering constitution and governance model;
-- a risk-based operating model with a fast lane and a governed lane;
-- documentation architecture and reusable records;
-- security, compliance, supply-chain, SRE, release, and incident rules;
-- AI-assisted engineering controls;
-- project and work templates;
-- an implementation and adoption roadmap;
-- automated repository validation and a CI quality gate.
+Every change must be simple, purposeful, automated, secure, measurable, reversible and evidence-verifiable. The exact constitutional text and machine-readable interpretation are enforced by hash and independent CI gates.
 
-## Core principle
+## Constitutional entry point
 
-> The process is defined by portable records, verifiable baselines, evidence, and clear authority. Tools are replaceable adapters.
+1. [`governance/WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md`](governance/WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md)
+2. [`governance/PRODUCT_DECISION_EXECUTION_CONSTITUTION.md`](governance/PRODUCT_DECISION_EXECUTION_CONSTITUTION.md)
+3. [`governance/PRIMARY_ENGINEERING_INVARIANT.json`](governance/PRIMARY_ENGINEERING_INVARIANT.json)
+4. [`governance/CONSTITUTIONAL_AUTHORITY.json`](governance/CONSTITUTIONAL_AUTHORITY.json)
+5. [`governance/ENGINEERING_CONSTITUTION.md`](governance/ENGINEERING_CONSTITUTION.md)
+6. [`governance/CONSTITUTIONAL_COMPATIBILITY_REPORT.md`](governance/CONSTITUTIONAL_COMPATIBILITY_REPORT.md)
 
 ## Operating flow
 
 ```text
-FRAME → SLICE → BUILD → VERIFY → ACCEPT → RELEASE → OPERATE → LEARN
+INTAKE → FRAME → CLASSIFY → DECIDE → SLICE → BUILD → VERIFY → ACCEPT → RELEASE → OPERATE → LEARN
 ```
 
-## Quick start
-
-1. Read [`governance/ENGINEERING_CONSTITUTION.md`](governance/ENGINEERING_CONSTITUTION.md).
-2. Select the correct lane using [`operating-model/RISK_AND_CHANGE_LANES.md`](operating-model/RISK_AND_CHANGE_LANES.md).
-3. Create a work package from [`templates/WORK_PACKAGE.md`](templates/WORK_PACKAGE.md).
-4. Follow the lifecycle in [`operating-model/ENGINEERING_LIFECYCLE.md`](operating-model/ENGINEERING_LIFECYCLE.md).
-5. Validate the repository:
+## Framework validation
 
 ```bash
 python3 scripts/validate_repository.py
+python3 scripts/validate_constitutions.py
+python3 scripts/validate_primary_invariant.py
+python3 scripts/validate_control_catalog.py
+python3 scripts/validate_assurance_mapping.py
+python3 scripts/validate_readiness.py
+python3 scripts/validate_toolchain_lock.py
+python3 scripts/validate_supply_chain.py
 python3 -m unittest discover -s tests -v
 ```
 
+For R1-R3 work, evaluate [`config/complexity-budget.json`](config/complexity-budget.json), assign a class from [`config/reversibility-classes.json`](config/reversibility-classes.json), register repeated manual work and link lifecycle evidence beyond Git history.
+
 ## Repository map
 
-- `governance/` — authority, invariants, ownership, change control;
-- `operating-model/` — lifecycle, quality, security, release, SRE, AI workflow;
-- `documentation/` — documentation structure, metadata, evidence and architecture;
-- `templates/` — reusable control records and operational templates;
-- `roadmap/` — implementation, adoption and maturity progression;
-- `references/` — standards baseline and terminology;
+- `governance/` — constitutions, authority, invariants, ownership and change control;
+- `operating-model/` — lifecycle, quality, complexity, reversibility, security, release and SRE;
+- `architecture/`, `controls/`, `profiles/`, `assurance/`, `readiness/` — machine-readable engineering control plane;
+- `documentation/`, `evidence/` — documentation, lifecycle graph, evidence and retention;
+- `supply-chain/` — deterministic packaging, SBOM, vulnerability, provenance and signing policy;
+- `templates/` — reusable product, decision, work and operational records;
+- `platform/`, `policy/`, `open-source/` — verified enforcement adapters;
 - `scripts/`, `tests/`, `.github/` — automated enforcement.
 
 ## Current state
 
-`0.1.0` is the **Foundation Release Candidate**. The control model, templates, validator and CI baseline are implemented. Organization-wide rollout, project scaffolding CLI, deployment adapters and compliance automation remain roadmap items.
+The v0.1 foundation, v0.2-v0.5 assurance/control layers and v0.6 supply-chain assurance are integrated into `main`. Constitutional governance and the primary invariant are being re-integrated against the current mainline in a dedicated review branch replacing the diverged PR #8 baseline. The executable `ew` CLI remains separately reviewed in stacked PR #9 and PR #10.
+
+The system is not yet `WORLD_CLASS_READY`. Named authorities, license/IP acceptance, real new/existing-project pilots, CLI consolidation, signed main/tag evidence and independent assessment remain required.
 
 ## Language policy
 
-English is the canonical normative language to keep the system portable and globally usable. Existing Czech normative material is preserved verbatim where required. Translations may be added, but they are non-normative unless explicitly promoted.
+English is canonical for portable framework material. The two exact Czech constitutions are normative by explicit governance decision and integrity binding.
