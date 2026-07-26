@@ -9,7 +9,7 @@
     "technical_owner": "Eimy Herrer and Johny"
   },
   "control": {
-    "version": "0.8.0-rc.1",
+    "version": "0.9.0-rc.1",
     "canonical_repository": "https://github.com/nulleimy/ENGINEERING-WORKFLOW",
     "default_branch": "main",
     "normative_language": "en-with-canonical-czech-constitutions",
@@ -25,10 +25,11 @@
     "lifecycle_evidence_graph": "evidence/lifecycle-evidence-graph.json"
   },
   "cli": {
-    "version": "0.1.0",
+    "version": "0.2.0",
     "entrypoint": "bin/ew",
     "foundation_document": "platform/EW_CLI_FOUNDATION.md",
-    "commands": ["init", "doctor", "self-test"],
+    "adoption_document": "platform/EW_ADOPT_FOUNDATION.md",
+    "commands": ["init", "adopt", "doctor", "rollback", "self-test"],
     "git_required": false,
     "external_runtime_dependencies": []
   },
