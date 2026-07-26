@@ -17,11 +17,17 @@
     "technical_operating_mode": "governance/WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md",
     "product_decision_execution_constitution": "governance/PRODUCT_DECISION_EXECUTION_CONSTITUTION.md",
     "constitutional_authority": "governance/CONSTITUTIONAL_AUTHORITY.json",
-    "constitutional_compatibility_report": "governance/CONSTITUTIONAL_COMPATIBILITY_REPORT.md"
+    "constitutional_compatibility_report": "governance/CONSTITUTIONAL_COMPATIBILITY_REPORT.md",
+    "primary_engineering_invariant": "governance/PRIMARY_ENGINEERING_INVARIANT.json",
+    "complexity_budget": "config/complexity-budget.json",
+    "reversibility_classes": "config/reversibility-classes.json",
+    "manual_work_register": "evidence/manual-work-register.json",
+    "lifecycle_evidence_graph": "evidence/lifecycle-evidence-graph.json"
   },
   "quality": {
     "validator": "python3 scripts/validate_repository.py",
     "constitutional_validator": "python3 scripts/validate_constitutions.py",
+    "primary_invariant_validator": "python3 scripts/validate_primary_invariant.py",
     "tests": "python3 -m unittest discover -s tests -v",
     "release_requires_clean_validation": true
   }
