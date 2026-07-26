@@ -1,0 +1,225 @@
+#!/usr/bin/env python3
+"""Dependency-free ENGINEERING-WORKFLOW bootstrap CLI."""
+from __future__ import annotations
+import argparse, hashlib, json, os, re, shutil, tempfile
+from datetime import datetime, timezone
+from pathlib import Path
+
+VERSION="0.1.0"
+CONTROL=".engineering-workflow"
+RISKS={"R0":0,"R1":1,"R2":2,"R3":3}
+REV_MIN={"REV-0":"R0","REV-1":"R1","REV-2":"R2","REV-3":"R3","REV-4":"R3"}
+PROFILES={
+ "experiment":("A1-professional-foundation","R1"),
+ "internal-tool":("A2-controlled-engineering","R2"),
+ "standard-product":("A3-high-assurance-product","R2"),
+ "production-service":("A4-production-assurance","R3"),
+ "security-critical":("A5-critical-trust","R3"),
+}
+SAFE_NAME=re.compile(r"^[A-Za-z0-9][A-Za-z0-9._ -]{0,127}$")
+SAFE_HASH=re.compile(r"^[0-9a-f]{64}$")
+
+class Blocked(RuntimeError): pass
+
+def canon(v): return (json.dumps(v,indent=2,sort_keys=True,ensure_ascii=False)+"\n").encode()
+def sha(data): return hashlib.sha256(data).hexdigest()
+def now(): return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00","Z")
+def slug(v): return re.sub(r"[^a-z0-9]+","-",v.lower()).strip("-")[:80]
+def emit(v,j):
+    if j: print(json.dumps(v,indent=2,sort_keys=True)); return
+    for k,x in v.items(): print(f"{k.upper()}={json.dumps(x,sort_keys=True) if isinstance(x,(dict,list)) else x}")
+
+def selection(profile,risk,rev):
+    if profile not in PROFILES or risk not in RISKS or rev not in REV_MIN: raise Blocked("invalid profile, risk or reversibility")
+    effective=max((risk,REV_MIN[rev]),key=RISKS.get)
+    assurance,maximum=PROFILES[profile]
+    if RISKS[effective]>RISKS[maximum]:
+        raise Blocked(f"{profile} permits {maximum}, but {rev} requires {REV_MIN[rev]}; choose a stronger profile")
+    return assurance,effective
+
+def safe_path(root,rel):
+    p=Path(rel)
+    if p.is_absolute() or ".." in p.parts: raise Blocked(f"unsafe manifest path: {rel!r}")
+    out=(root/p).resolve(strict=False)
+    try: out.relative_to(root.resolve())
+    except ValueError as e: raise Blocked(f"manifest path escapes control directory: {rel!r}") from e
+    return out
+
+def project_record(name,profile,risk,effective,rev,created):
+    assurance,_=PROFILES[profile]
+    return {
+      "$schema":"https://github.com/nulleimy/ENGINEERING-WORKFLOW/schemas/ew-project.schema.json",
+      "schema_version":VERSION,
+      "project":{"id":slug(name),"name":name,"status":"discovery","profile":profile,
+        "assurance_level":assurance,"requested_risk":risk,"effective_risk":effective,
+        "reversibility":rev,"created_at":created},
+      "governance":{"primary_invariant":["simple","purposeful","automated","secure","measurable","reversible","evidence-verifiable"],
+        "protected_operation_authority":"explicit-operator-authorization-required","git_required":False}
+    }
+
+def render(rec,created):
+    p=rec["project"]; pid=p["id"]
+    files={
+      "project.json":canon(rec),
+      "PRODUCT_DEFINITION.md":f"""# Product Definition
+- Record ID: `PD-{pid}-001`
+- Status: `PROPOSED`
+- Product Authority: `UNASSIGNED`
+- Engineering Authority: `UNASSIGNED`
+- Target user: `TO_BE_DEFINED`
+- Problem: `TO_BE_DEFINED`
+- Primary value: `TO_BE_DEFINED`
+- Success metrics: `TO_BE_DEFINED`
+- Boundaries and non-goals: `TO_BE_DEFINED`
+- Security/data classification: `TO_BE_CLASSIFIED`
+- Operational profile: `{p['profile']}`
+""".encode(),
+      "WORK_PACKAGE.md":f"""# Work Package
+- ID: `WP-{pid}-bootstrap-001`
+- Mode: `DISCOVER`
+- Risk: `{p['effective_risk']}`
+- Reversibility: `{p['reversibility']}`
+- Owner/Authority: `UNASSIGNED`
+- Target: accept product definition, authorities and first vertical slice.
+- Allowed scope: `.engineering-workflow/`
+- Prohibited scope: product code, secrets, Git history and production.
+- Verify: `ew doctor .`
+- Recovery: remove `.engineering-workflow/` before acceptance.
+- Status: `PROPOSED`
+""".encode(),
+      "DECISION_REGISTER.md":f"""# Decision Register
+| ID | Class | Status | Decision |
+|---|---|---|---|
+| `DR-{pid}-001` | D2 | PROPOSED | Use `{p['profile']}`, `{p['effective_risk']}`, `{p['reversibility']}`. |
+""".encode(),
+      "lifecycle.json":canon({"schema_version":VERSION,"project_id":pid,"created_at":created,
+        "nodes":[
+          {"id":f"problem:{pid}:001","type":"product-problem","status":"PROPOSED"},
+          {"id":f"decision:{pid}:001","type":"decision","status":"PROPOSED"},
+          {"id":f"work:{pid}:001","type":"work-package","status":"IMPLEMENTED"},
+          {"id":f"evidence:{pid}:001","type":"evidence","status":"VERIFIED"}],
+        "edges":[
+          {"from":f"problem:{pid}:001","to":f"decision:{pid}:001","relation":"informs"},
+          {"from":f"decision:{pid}:001","to":f"work:{pid}:001","relation":"authorizes"},
+          {"from":f"work:{pid}:001","to":f"evidence:{pid}:001","relation":"produces"}],
+        "git_history_is_authoritative":False}),
+      "evidence/init.json":canon({"schema_version":VERSION,"type":"ew-init","status":"VERIFIED",
+        "created_at":created,"project_id":pid,"claims":{"controlled_records_generated":True,
+        "product_ready":False,"release_ready":False,"operational_ready":False}})
+    }
+    hashes={k:sha(v) for k,v in sorted(files.items())}
+    files["manifest.json"]=canon({"schema_version":VERSION,"project_id":pid,"generator":"ew",
+      "generator_version":VERSION,"files":hashes,"content_digest":sha(canon(hashes))})
+    return files
+
+def doctor(target):
+    target=target.expanduser().resolve(strict=False); control=target/CONTROL; checks=[]
+    def ck(name,ok,detail): checks.append({"name":name,"passed":bool(ok),"detail":str(detail)})
+    ck("python-version",tuple(os.sys.version_info[:2])>=(3,11),os.sys.version.split()[0])
+    ck("project-directory",target.is_dir() and not target.is_symlink(),target)
+    ck("control-directory",control.is_dir() and not control.is_symlink(),control)
+    required={"project.json","PRODUCT_DEFINITION.md","WORK_PACKAGE.md","DECISION_REGISTER.md","lifecycle.json","evidence/init.json","manifest.json"}
+    if control.is_dir():
+        links=[str(x.relative_to(control)) for x in control.rglob("*") if x.is_symlink()]
+        ck("no-symlinks",not links,links or "none")
+        missing=sorted(x for x in required if not (control/x).is_file()); ck("required-records",not missing,missing or "all present")
+    else: ck("no-symlinks",False,"control directory missing"); ck("required-records",False,"control directory missing")
+    try: manifest=json.loads((control/"manifest.json").read_text()); ck("manifest-json",True,"valid")
+    except Exception as e: manifest={}; ck("manifest-json",False,e)
+    declared=manifest.get("files",{}); errors=[]
+    if not isinstance(declared,dict): declared={}; errors.append("files:not-object")
+    if manifest.get("content_digest")!=sha(canon(declared)): errors.append("content-digest:mismatch")
+    for rel,expected in declared.items():
+        try: path=safe_path(control,rel)
+        except Blocked as e: errors.append(str(e)); continue
+        if not isinstance(expected,str) or not SAFE_HASH.fullmatch(expected): errors.append(f"{rel}:invalid-hash")
+        elif not path.is_file(): errors.append(f"{rel}:missing")
+        elif sha(path.read_bytes())!=expected: errors.append(f"{rel}:hash-mismatch")
+    actual={str(x.relative_to(control)) for x in control.rglob("*") if x.is_file() and x.name!="manifest.json"} if control.is_dir() else set()
+    if actual-set(declared): errors.append("undeclared:"+",".join(sorted(actual-set(declared))))
+    ck("manifest-integrity",bool(declared) and not errors,errors or f"{len(declared)} files")
+    try:
+        rec=json.loads((control/"project.json").read_text()); p=rec["project"]
+        _,effective=selection(p["profile"],p["requested_risk"],p["reversibility"])
+        ok=effective==p["effective_risk"] and rec["schema_version"]==VERSION
+        ck("project-selection",ok,f"{p['profile']} {p['effective_risk']} {p['reversibility']}")
+    except Exception as e: ck("project-selection",False,e)
+    try:
+        g=json.loads((control/"lifecycle.json").read_text()); ids=[n["id"] for n in g["nodes"]]
+        refs={v for e in g["edges"] for v in (e["from"],e["to"])}
+        ok=len(ids)==len(set(ids)) and refs<=set(ids) and g["git_history_is_authoritative"] is False
+        ck("lifecycle-graph",ok,f"nodes={len(ids)} edges={len(g['edges'])}")
+    except Exception as e: ck("lifecycle-graph",False,e)
+    passed=all(c["passed"] for c in checks)
+    return {"status":"PASS" if passed else "FAIL","operation":"doctor","project_dir":str(target),
+      "details":{"control_plane_ready":passed,"project_ready":False,
+      "readiness_reason":"product definition and authorities remain PROPOSED" if passed else "control records failed validation",
+      "checks":checks}}
+
+def init(target,name,profile,risk,rev,dry=False):
+    if not SAFE_NAME.fullmatch(name): raise Blocked("unsafe project name")
+    assurance,effective=selection(profile,risk,rev)
+    target=target.expanduser().resolve(strict=False); control=target/CONTROL
+    if target.exists() and target.is_symlink(): raise Blocked("project directory may not be a symlink")
+    requested={"name":name,"profile":profile,"risk":risk,"rev":rev}
+    if control.exists():
+        try:
+            p=json.loads((control/"project.json").read_text())["project"]
+            existing={"name":p["name"],"profile":p["profile"],"risk":p["requested_risk"],"rev":p["reversibility"]}
+        except Exception as e: raise Blocked(f"existing control state is invalid: {e}") from e
+        if existing!=requested: raise Blocked(f"controlled state differs: {existing}")
+        if doctor(target)["status"]!="PASS": raise Blocked("existing controlled project failed doctor")
+        return {"status":"NOOP","operation":"init","project_dir":str(target),"details":{"reason":"identical controlled state exists"}}
+    plan={"control_directory":str(control),"profile":profile,"assurance_level":assurance,
+      "requested_risk":risk,"effective_risk":effective,"reversibility":rev}
+    if dry: return {"status":"PLANNED","operation":"init","project_dir":str(target),"details":plan}
+    made=False; stage=None
+    try:
+        if not target.exists(): target.mkdir(parents=True); made=True
+        if not target.is_dir() or not os.access(target,os.W_OK): raise Blocked("project target is not writable directory")
+        created=now(); data=render(project_record(name,profile,risk,effective,rev,created),created)
+        stage=Path(tempfile.mkdtemp(prefix=f".{CONTROL}.staging-",dir=target))
+        for rel,content in data.items():
+            out=stage/rel; out.parent.mkdir(parents=True,exist_ok=True); out.write_bytes(content)
+        if any(x.is_symlink() for x in stage.rglob("*")): raise Blocked("generated state contains symlink")
+        if control.exists(): raise Blocked("controlled state appeared during init")
+        os.replace(stage,control); stage=None
+        if doctor(target)["status"]!="PASS": shutil.rmtree(control,ignore_errors=True); raise Blocked("post-write doctor failed")
+        plan["manifest_digest"]=sha((control/"manifest.json").read_bytes())
+        return {"status":"CREATED","operation":"init","project_dir":str(target),"details":plan}
+    except Exception:
+        if stage: shutil.rmtree(stage,ignore_errors=True)
+        if made and target.exists() and not any(target.iterdir()): target.rmdir()
+        raise
+
+def selftest():
+    with tempfile.TemporaryDirectory(prefix="ew-self-test-") as d:
+        p=Path(d)/"sample"; args=("EW Self Test","standard-product","R2","REV-2")
+        a=init(p,*args,dry=True)
+        if p.exists(): raise RuntimeError("dry-run wrote files")
+        b=init(p,*args); c=doctor(p); n=init(p,*args)
+        f=p/CONTROL/"PRODUCT_DEFINITION.md"; original=f.read_bytes(); f.write_bytes(original+b"\ntamper\n")
+        bad=doctor(p); f.write_bytes(original); good=doctor(p)
+        checks={"dry_run":a["status"]=="PLANNED","created":b["status"]=="CREATED","doctor":c["status"]=="PASS",
+          "noop":n["status"]=="NOOP","tamper":bad["status"]=="FAIL","restore":good["status"]=="PASS"}
+        if not all(checks.values()): raise RuntimeError(checks)
+        return {"status":"PASS","operation":"self-test","project_dir":str(p),"details":{"assertions":checks}}
+
+def main(argv=None):
+    ap=argparse.ArgumentParser(prog="ew"); ap.add_argument("--version",action="version",version=f"%(prog)s {VERSION}")
+    sub=ap.add_subparsers(dest="cmd",required=True)
+    i=sub.add_parser("init"); i.add_argument("project_dir",type=Path); i.add_argument("--name",required=True)
+    i.add_argument("--profile",choices=sorted(PROFILES),default="standard-product"); i.add_argument("--risk",choices=RISKS,default="R2")
+    i.add_argument("--reversibility",choices=REV_MIN,default="REV-2"); i.add_argument("--dry-run",action="store_true"); i.add_argument("--json",action="store_true")
+    d=sub.add_parser("doctor"); d.add_argument("project_dir",type=Path,nargs="?",default=Path(".")); d.add_argument("--json",action="store_true")
+    s=sub.add_parser("self-test"); s.add_argument("--json",action="store_true")
+    a=ap.parse_args(argv)
+    try:
+        out=init(a.project_dir,a.name,a.profile,a.risk,a.reversibility,a.dry_run) if a.cmd=="init" else doctor(a.project_dir) if a.cmd=="doctor" else selftest()
+        emit(out,a.json); return 0 if out["status"] in {"PASS","PLANNED","CREATED","NOOP"} else 1
+    except Blocked as e:
+        emit({"status":"BLOCKED","operation":a.cmd,"project_dir":str(getattr(a,"project_dir","")),"details":{"error":str(e)}},getattr(a,"json",False)); return 2
+    except Exception as e:
+        emit({"status":"FAILED","operation":a.cmd,"project_dir":str(getattr(a,"project_dir","")),"details":{"error":str(e)}},getattr(a,"json",False)); return 1
+
+if __name__=="__main__": raise SystemExit(main())

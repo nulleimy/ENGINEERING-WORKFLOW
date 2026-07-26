@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nulleimy/ENGINEERING-WORKFLOW/schemas/ew-project.schema.json",
+  "title": "EW initialized project record",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "project",
+    "governance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "status",
+        "profile",
+        "assurance_level",
+        "requested_risk",
+        "effective_risk",
+        "reversibility",
+        "created_at"
+      ],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "status": {"const": "discovery"},
+        "profile": {"enum": ["experiment", "internal-tool", "standard-product", "production-service", "security-critical"]},
+        "requested_risk": {"enum": ["R0", "R1", "R2", "R3"]},
+        "effective_risk": {"enum": ["R0", "R1", "R2", "R3"]},
+        "reversibility": {"enum": ["REV-0", "REV-1", "REV-2", "REV-3", "REV-4"]},
+        "created_at": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": true
+    },
+    "governance": {
+      "type": "object",
+      "required": ["primary_invariant", "protected_operation_authority", "git_required"],
+      "properties": {"git_required": {"const": false}},
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
