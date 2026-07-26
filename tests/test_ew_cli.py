@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -11,7 +12,7 @@ EW = ROOT / "bin/ew"
 
 
 def run_ew(*args: str) -> subprocess.CompletedProcess[str]:
-    return subprocess.run([str(EW), *args], cwd=ROOT, text=True, capture_output=True, check=False)
+    return subprocess.run([sys.executable, str(EW), *args], cwd=ROOT, text=True, capture_output=True, check=False)
 
 
 class EWCLITest(unittest.TestCase):

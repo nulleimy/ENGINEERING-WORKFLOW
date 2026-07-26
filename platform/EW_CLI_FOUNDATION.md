@@ -25,7 +25,7 @@ ew self-test
 
 `ew adopt` performs a bounded read-only audit by default. `--apply` is required to add the control plane to an existing project. Product source is fingerprinted before and after publication and is not modified.
 
-`ew doctor` verifies required records, profile/risk/reversibility consistency, manifest hashes, adoption evidence, undeclared files, symlinks and lifecycle graph references.
+`ew doctor` verifies required records, profile/risk/reversibility consistency, manifest hashes, adoption evidence, undeclared files, symlinks and lifecycle graph references. It stops before reading content when the control directory itself or any controlled path is linked or unsafe.
 
 `ew rollback` is preview-first and removes only an unaccepted, manifest-owned adoption control directory. It does not attempt semantic product migration or source rollback.
 
@@ -40,7 +40,8 @@ ew self-test
 - Apply is fail-closed for unresolved blockers.
 - Profile downgrade is rejected when observed risk or reversibility requires a stronger profile.
 - Terraform, Kubernetes and sensitive-path indicators raise the observed minimum risk to R3.
-- Symlinks are recorded but never followed.
+- Symlinks are recorded but never followed; adoption requires R3, explicit acknowledgement and a rationale of at least 20 characters.
+- Regular files are opened with no-follow semantics where supported and are checked before open, on the descriptor, after read and again by path.
 - Sensitive-path content is neither read nor hashed.
 - Scans are capped at 10,000 files and 256 MiB.
 - `REV-3` and `REV-4` require a profile supporting R3.
@@ -61,3 +62,7 @@ The detailed adoption and rollback contract is defined in [`EW_ADOPT_FOUNDATION.
 ## Deliberately deferred
 
 Semantic migration, project-specific golden paths, upgrades, post-acceptance rollback, provider adapters, release signing and remote evidence storage are separate governed slices.
+
+## Portability evidence
+
+The CI matrix runs the CLI self-test and all CLI/adversarial tests on Ubuntu 24.04, macOS 14 and Windows 2022 with Python 3.11 and 3.12. Platform-specific symlink tests are skipped only when the runner cannot create symlinks.

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,7 +13,7 @@ CONTROL = ".engineering-workflow"
 
 
 def run_ew(*args: str) -> subprocess.CompletedProcess[str]:
-    return subprocess.run([str(EW), *args], cwd=ROOT, text=True, capture_output=True, check=False)
+    return subprocess.run([sys.executable, str(EW), *args], cwd=ROOT, text=True, capture_output=True, check=False)
 
 
 class EWAdoptTest(unittest.TestCase):

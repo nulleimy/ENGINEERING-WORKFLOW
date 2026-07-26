@@ -4,14 +4,28 @@
   "title": "EW read-only adoption audit",
   "type": "object",
   "required": [
-    "schema_version", "type", "status", "project_dir", "fingerprint",
-    "files_scanned", "bytes_scanned", "limits", "inventory",
-    "symlinks_not_followed", "sensitive_paths_content_not_read",
-    "detected_technologies", "observed_minimum_risk", "recommended_profile",
-    "findings", "git_history_is_authoritative"
+    "schema_version",
+    "type",
+    "status",
+    "project_dir",
+    "fingerprint",
+    "files_scanned",
+    "bytes_scanned",
+    "limits",
+    "ignored_directories",
+    "inventory",
+    "symlinks_not_followed",
+    "symlink_records",
+    "symlink_acknowledgement",
+    "sensitive_paths_content_not_read",
+    "detected_technologies",
+    "observed_minimum_risk",
+    "recommended_profile",
+    "findings",
+    "git_history_is_authoritative"
   ],
   "properties": {
-    "schema_version": {"const": "0.2.0"},
+    "schema_version": {"const": "0.3.0"},
     "type": {"const": "ew-adoption-audit"},
     "status": {"const": "VERIFIED"},
     "project_dir": {"type": "string", "minLength": 1},
@@ -29,7 +43,7 @@
     },
     "inventory": {
       "type": "array",
-      "minItems": 1,
+      "minItems": 0,
       "items": {
         "type": "object",
         "required": ["path", "size", "mode", "mtime_ns", "sha256", "content_read"],
@@ -50,7 +64,31 @@
     "observed_minimum_risk": {"enum": ["R2", "R3"]},
     "recommended_profile": {"enum": ["standard-product", "production-service"]},
     "findings": {"type": "array", "items": {"type": "object"}},
-    "git_history_is_authoritative": {"const": false}
+    "git_history_is_authoritative": {"const": false},
+    "ignored_directories": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "symlink_records": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["path", "target_sha256"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "target_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "symlink_acknowledgement": {
+      "type": "object",
+      "required": ["acknowledged", "rationale", "rationale_sha256"],
+      "properties": {
+        "acknowledged": {"type": "boolean"},
+        "rationale": {"type": ["string", "null"]},
+        "rationale_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    }
   },
   "additionalProperties": false
 }

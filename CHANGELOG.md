@@ -3,7 +3,7 @@ id: EW-CHANGELOG
 title: Changelog
 status: current
 owner: Eimy Herrer and Johny
-version: 0.9.1-rc.1
+version: 0.9.2-rc.1
 last-reviewed: 2026-07-26
 ---
 
@@ -32,7 +32,12 @@ All notable changes are recorded here. Versions follow Semantic Versioning.
 - sensitive-path content redaction and explicit acknowledgement gate;
 - pre-adoption evidence snapshot and no-source-change proof;
 - preview-first `ew rollback` limited to manifest-owned bootstrap state;
-- CLI schemas, documentation and negative regression tests.
+- CLI schemas, documentation and negative regression tests;
+- race-aware no-follow file hashing with pre-open, descriptor and post-read identity checks;
+- fail-closed doctor boundary for linked or unsafe control directories;
+- R3 symlink acknowledgement with rationale evidence and hashed link targets;
+- Linux, macOS and Windows portability matrix for Python 3.11 and 3.12;
+- adversarial filesystem tests for link substitution and concurrent mutation.
 
 ### Planned
 

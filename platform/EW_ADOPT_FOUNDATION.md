@@ -25,11 +25,11 @@ The adoption process:
 
 - requires an existing non-symlink directory;
 - ignores common generated and dependency directories;
-- never follows symlinks;
+- never follows symlinks and stores only the SHA-256 of link-target text, never the target itself;
 - rejects special files and unreadable paths;
 - caps the audit at 10,000 files and 256 MiB;
 - detects common language, CI, container and infrastructure markers;
-- raises the minimum risk to R3 for Terraform, Kubernetes or sensitive-path indicators;
+- raises the minimum risk to R3 for Terraform, Kubernetes, sensitive-path indicators or any symlink;
 - does not read or hash the content of `.env`, private-key or certificate-like paths;
 - requires explicit acknowledgement before adopting a project with sensitive-path indicators;
 - stages the complete control directory before atomic publication;
@@ -90,6 +90,18 @@ Sensitive-path metadata is reported but content is not read or hashed. Apply req
 ```
 
 Acknowledgement does not accept the security risk or expose a secret. It confirms that the operator reviewed the reported paths and selected an R3-capable profile.
+
+## Symlink acknowledgement
+
+A project containing symlinks can be previewed without writes. Apply requires all of:
+
+```text
+R3-CAPABLE PROFILE
+--acknowledge-symlinks
+--symlink-rationale "at least twenty characters"
+```
+
+The audit stores the path, a SHA-256 of the link-target text, the acknowledgement and its rationale digest. It never stores or follows the raw target.
 
 ## Rollback
 
