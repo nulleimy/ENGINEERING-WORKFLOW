@@ -132,6 +132,7 @@ def main() -> int:
         "primary_invariant_validator": "python3 scripts/validate_primary_invariant.py",
         "supply_chain_validator": "python3 scripts/validate_supply_chain.py",
         "cli_self_test": "./bin/ew self-test --json",
+        "portability": "python bin/ew self-test --json + CLI test matrix",
         "tests": "python3 -m unittest discover -s tests -v",
     }
     for key, expected in expected_quality.items():
@@ -140,7 +141,7 @@ def main() -> int:
 
     cli = control.get("cli", {})
     expected_cli = {
-        "version": "0.2.0",
+        "version": "0.3.0",
         "entrypoint": "bin/ew",
         "foundation_document": "platform/EW_CLI_FOUNDATION.md",
         "adoption_document": "platform/EW_ADOPT_FOUNDATION.md",
@@ -156,16 +157,30 @@ def main() -> int:
         if not relative or not (ROOT / relative).is_file():
             error(errors, f"project-control.json references missing cli.{key}: {relative!r}")
 
+    portability_workflow = ROOT / ".github/workflows/portability.yml"
+    if not portability_workflow.is_file():
+        error(errors, "missing portability workflow")
+    else:
+        workflow_text = portability_workflow.read_text(encoding="utf-8")
+        for marker in ("ubuntu-24.04", "macos-14", "windows-2022", 'python-version: ["3.11", "3.12"]'):
+            if marker not in workflow_text:
+                error(errors, f"portability workflow missing matrix marker: {marker}")
+
     entrypoint = ROOT / str(cli.get("entrypoint", ""))
+    cli_parser = ROOT / "bin/ew_cli.py"
     if entrypoint.is_file():
         text = entrypoint.read_text(encoding="utf-8")
-        if 'CLI_VERSION = "0.2.0"' not in text:
+        if 'CLI_VERSION = "0.3.0"' not in text:
             error(errors, "bin/ew CLI_VERSION does not match project-control.json")
-        for command in expected_cli["commands"]:
-            if f'add_parser("{command}")' not in text:
-                error(errors, f"bin/ew does not register required command: {command}")
         if entrypoint.stat().st_mode & 0o111 == 0:
             error(errors, "bin/ew must be executable")
+    if not cli_parser.is_file():
+        error(errors, "missing modular CLI parser: bin/ew_cli.py")
+    else:
+        parser_text = cli_parser.read_text(encoding="utf-8")
+        for command in expected_cli["commands"]:
+            if f"add_parser('{command}')" not in parser_text and f'add_parser("{command}")' not in parser_text:
+                error(errors, f"bin/ew_cli.py does not register required command: {command}")
 
     if errors:
         print("VALIDATION=FAILED")

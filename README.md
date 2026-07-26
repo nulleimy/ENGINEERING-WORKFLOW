@@ -3,7 +3,7 @@ id: EW-README
 title: ENGINEERING-WORKFLOW
 status: current
 owner: Eimy Herrer and Johny
-version: 0.9.1-rc.1
+version: 0.9.2-rc.1
 last-reviewed: 2026-07-26
 ---
 
@@ -53,7 +53,7 @@ Writing requires explicit `--apply`:
 ./bin/ew adopt ./existing-project --name "Existing Project" --profile standard-product --risk R2 --reversibility REV-2 --apply --json
 ```
 
-Adoption performs a bounded inventory, detects common technologies, computes a source fingerprint, records blockers and writes only `.engineering-workflow/`. Symlinks are not followed. Sensitive-path content is not read or hashed.
+Adoption performs a bounded inventory, detects common technologies, computes a source fingerprint, records blockers and writes only `.engineering-workflow/`. Symlinks are not followed. Sensitive-path content is not read or hashed. Symlink adoption is fail-closed unless an R3-capable profile, explicit acknowledgement and a recorded rationale are supplied.
 
 Bootstrap rollback is preview-first and limited to the manifest-owned control directory:
 
@@ -92,6 +92,7 @@ python3 scripts/validate_toolchain_lock.py
 python3 scripts/validate_supply_chain.py
 ./bin/ew self-test --json
 python3 -m unittest discover -s tests -v
+# CI also runs portability.yml on Ubuntu, macOS and Windows with Python 3.11/3.12.
 ```
 
 For R1-R3 work, evaluate [`config/complexity-budget.json`](config/complexity-budget.json), assign a class from [`config/reversibility-classes.json`](config/reversibility-classes.json), register repeated manual work and link lifecycle evidence beyond Git history.
@@ -110,7 +111,7 @@ For R1-R3 work, evaluate [`config/complexity-budget.json`](config/complexity-bud
 
 ## Current state
 
-The v0.1 foundation, v0.2-v0.5 assurance/control layers and v0.6 supply-chain assurance are integrated into `main`. Draft PR #11 provides the verified constitutional-governance mainline integration. This stacked v0.9.1 release candidate integrates the previously reviewed CLI bootstrap and adoption slices on top of PR #11 without merging the diverged PR #8 branch.
+The v0.1 foundation, v0.2-v0.5 assurance/control layers and v0.6 supply-chain assurance are integrated into `main`. Draft PR #11 provides the verified constitutional-governance mainline integration. This stacked v0.9.2 hardening release candidate integrates the previously reviewed CLI bootstrap and adoption slices on top of PR #11 without merging the diverged PR #8 branch.
 
 The system is not yet `WORLD_CLASS_READY`. Named authorities, license/IP acceptance, real new/existing-project pilots, upgrade and semantic migration support, signed main/tag evidence and independent assessment remain required.
 

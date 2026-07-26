@@ -125,6 +125,16 @@
     ".github/workflows/policy.yml",
     ".github/workflows/scorecard.yml",
     ".github/workflows/supply-chain.yml",
-    ".github/pull_request_template.md"
+    ".github/pull_request_template.md",
+    "tests/test_ew_hardening.py",
+    ".github/workflows/portability.yml",
+    "bin/ew_core.py",
+    "bin/ew_fs.py",
+    "bin/ew_runtime.py",
+    "bin/ew_scan.py",
+    "bin/ew_records.py",
+    "bin/ew_doctor.py",
+    "bin/ew_ops.py",
+    "bin/ew_cli.py"
   ]
 }

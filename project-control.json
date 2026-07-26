@@ -9,7 +9,7 @@
     "technical_owner": "Eimy Herrer and Johny"
   },
   "control": {
-    "version": "0.9.1-rc.1",
+    "version": "0.9.2-rc.1",
     "canonical_repository": "https://github.com/nulleimy/ENGINEERING-WORKFLOW",
     "default_branch": "main",
     "normative_language": "en-with-canonical-czech-constitutions",
@@ -25,11 +25,17 @@
     "lifecycle_evidence_graph": "evidence/lifecycle-evidence-graph.json"
   },
   "cli": {
-    "version": "0.2.0",
+    "version": "0.3.0",
     "entrypoint": "bin/ew",
     "foundation_document": "platform/EW_CLI_FOUNDATION.md",
     "adoption_document": "platform/EW_ADOPT_FOUNDATION.md",
-    "commands": ["init", "adopt", "doctor", "rollback", "self-test"],
+    "commands": [
+      "init",
+      "adopt",
+      "doctor",
+      "rollback",
+      "self-test"
+    ],
     "git_required": false,
     "external_runtime_dependencies": []
   },
@@ -40,6 +46,7 @@
     "supply_chain_validator": "python3 scripts/validate_supply_chain.py",
     "cli_self_test": "./bin/ew self-test --json",
     "tests": "python3 -m unittest discover -s tests -v",
-    "release_requires_clean_validation": true
+    "release_requires_clean_validation": true,
+    "portability": "python bin/ew self-test --json + CLI test matrix"
   }
 }
