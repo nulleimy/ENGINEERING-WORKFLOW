@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$")
 LINK = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
-FRONT_MATTER_REQUIRED = ("governance", "operating-model", "documentation", "roadmap", "references", "templates")
+FRONT_MATTER_REQUIRED = ("governance", "operating-model", "documentation", "roadmap", "references", "templates", "platform")
 FRONT_FIELDS = {"id", "title", "status", "owner", "version", "last-reviewed"}
 ALLOWED_STATUS = {"draft", "proposed", "current", "deprecated", "archived", "superseded"}
 SECRET_PATTERNS = [
@@ -57,8 +57,7 @@ def validate_links(path: Path, text: str, errors: list[str]) -> None:
         target = target.strip().split("#", 1)[0]
         if not target or target.startswith(("#", "mailto:")):
             continue
-        parsed = urlparse(target)
-        if parsed.scheme:
+        if urlparse(target).scheme:
             continue
         resolved = (path.parent / target).resolve()
         try:
@@ -73,9 +72,9 @@ def validate_links(path: Path, text: str, errors: list[str]) -> None:
 def main() -> int:
     errors: list[str] = []
     required = json.loads((ROOT / "config/required-paths.json").read_text(encoding="utf-8"))["required_paths"]
-    for rel in required:
-        if not (ROOT / rel).is_file():
-            error(errors, f"missing required file: {rel}")
+    for relative in required:
+        if not (ROOT / relative).is_file():
+            error(errors, f"missing required file: {relative}")
 
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     if not SEMVER.match(version):
@@ -87,7 +86,7 @@ def main() -> int:
         except Exception as exc:
             error(errors, f"{json_path.relative_to(ROOT)}: invalid JSON: {exc}")
 
-    ids: dict[str, Path] = {}
+    document_ids: dict[str, Path] = {}
     for path in ROOT.rglob("*.md"):
         if ".git" in path.parts:
             continue
@@ -95,12 +94,12 @@ def main() -> int:
         if not text.strip():
             error(errors, f"{path.relative_to(ROOT)}: empty document")
         if path.relative_to(ROOT).parts[0] in FRONT_MATTER_REQUIRED and path.name != "WORLD_CLASS_SOFTWARE_DEVOPS_OPERATING_MODE.md":
-            meta = parse_front_matter(path, text, errors)
-            doc_id = meta.get("id")
-            if doc_id:
-                if doc_id in ids:
-                    error(errors, f"duplicate document id {doc_id}: {ids[doc_id].relative_to(ROOT)} and {path.relative_to(ROOT)}")
-                ids[doc_id] = path
+            metadata = parse_front_matter(path, text, errors)
+            document_id = metadata.get("id")
+            if document_id:
+                if document_id in document_ids:
+                    error(errors, f"duplicate document id {document_id}: {document_ids[document_id].relative_to(ROOT)} and {path.relative_to(ROOT)}")
+                document_ids[document_id] = path
         validate_links(path, text, errors)
         for pattern in SECRET_PATTERNS:
             if pattern.search(text):
@@ -110,20 +109,39 @@ def main() -> int:
     if control.get("control", {}).get("version") != version:
         error(errors, "project-control.json version does not match VERSION")
     for key in (
-        "governance_file",
-        "technical_operating_mode",
-        "product_decision_execution_constitution",
-        "constitutional_authority",
-        "constitutional_compatibility_report",
-        "primary_engineering_invariant",
-        "complexity_budget",
-        "reversibility_classes",
-        "manual_work_register",
-        "lifecycle_evidence_graph",
+        "governance_file", "technical_operating_mode", "product_decision_execution_constitution",
+        "constitutional_authority", "constitutional_compatibility_report", "primary_engineering_invariant",
+        "complexity_budget", "reversibility_classes", "manual_work_register", "lifecycle_evidence_graph",
     ):
-        rel = control.get("control", {}).get(key)
-        if not rel or not (ROOT / rel).is_file():
-            error(errors, f"project-control.json references missing {key}: {rel!r}")
+        relative = control.get("control", {}).get(key)
+        if not relative or not (ROOT / relative).is_file():
+            error(errors, f"project-control.json references missing {key}: {relative!r}")
+
+    cli = control.get("cli", {})
+    expected_cli = {
+        "version": "0.2.0",
+        "entrypoint": "bin/ew",
+        "foundation_document": "platform/EW_CLI_FOUNDATION.md",
+        "adoption_document": "platform/EW_ADOPT_FOUNDATION.md",
+        "commands": ["init", "adopt", "doctor", "rollback", "self-test"],
+        "git_required": False,
+        "external_runtime_dependencies": [],
+    }
+    for key, value in expected_cli.items():
+        if cli.get(key) != value:
+            error(errors, f"project-control.json cli.{key} must equal {value!r}")
+    for key in ("entrypoint", "foundation_document", "adoption_document"):
+        relative = cli.get(key)
+        if not relative or not (ROOT / relative).is_file():
+            error(errors, f"project-control.json references missing cli.{key}: {relative!r}")
+    entrypoint = ROOT / str(cli.get("entrypoint", ""))
+    if entrypoint.is_file():
+        text = entrypoint.read_text(encoding="utf-8")
+        if 'CLI_VERSION = "0.2.0"' not in text:
+            error(errors, "bin/ew CLI_VERSION does not match project-control.json")
+        for command in expected_cli["commands"]:
+            if f'add_parser("{command}")' not in text:
+                error(errors, f"bin/ew does not register required command: {command}")
 
     if errors:
         print("VALIDATION=FAILED")
@@ -133,7 +151,8 @@ def main() -> int:
     print("VALIDATION=PASSED")
     print(f"VERSION={version}")
     print(f"REQUIRED_FILES={len(required)}")
-    print(f"CONTROLLED_DOCUMENT_IDS={len(ids)}")
+    print(f"CONTROLLED_DOCUMENT_IDS={len(document_ids)}")
+    print(f"CLI_COMMANDS={len(expected_cli['commands'])}")
     return 0
 
 

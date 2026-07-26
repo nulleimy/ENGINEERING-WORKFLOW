@@ -47,5 +47,8 @@ jobs:
       - name: Validate locked open-source enforcement toolchain
         run: python3 scripts/validate_toolchain_lock.py
 
+      - name: Run EW CLI end-to-end self-test
+        run: ./bin/ew self-test --json
+
       - name: Run unit tests
         run: python3 -m unittest discover -s tests -v
