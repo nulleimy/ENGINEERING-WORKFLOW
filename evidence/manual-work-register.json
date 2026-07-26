@@ -1,0 +1,19 @@
+{
+  "$schema": "../schemas/manual-work-register.schema.json",
+  "schema_version": "1.0.0",
+  "status": "current",
+  "automation_candidate_threshold": {
+    "occurrences_per_30_days": 2,
+    "minutes_per_occurrence": 15
+  },
+  "allowed_states": [
+    "MANUAL",
+    "JUSTIFIED_TEMPORARILY",
+    "AUTOMATION_CANDIDATE",
+    "AUTOMATING",
+    "AUTOMATED",
+    "VERIFIED",
+    "RETIRED"
+  ],
+  "entries": []
+}
