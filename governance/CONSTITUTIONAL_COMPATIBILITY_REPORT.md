@@ -24,7 +24,7 @@ FINAL_ACCEPTANCE=NOT_GRANTED
 ```text
 Technical constitution SHA-256: ed44c6147049887d941b7497f1bce3b817f22b6ae00a5136a27365a2f688d918
 Product constitution SHA-256: be1f411de132280c2588328cffd76ee76053e4382b36b48d7c5ca7edd5deb719
-Primary invariant SHA-256: 2e52501767e09b941a1f35d549cd95d802076665e76de909bb27c25603c85588
+Primary invariant SHA-256: b07005ab0813e581da87a44680fc1bb7229ae31fbbd8eca1ff6b6b25773d9a9e
 ```
 
 The technical constitution remains byte-identical to the canonical repository file. The product constitution promotes the design motto to Article 0 and binds its machine-readable interpretation by hash.
