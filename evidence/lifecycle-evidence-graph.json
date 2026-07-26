@@ -1,0 +1,53 @@
+{
+  "$schema": "../schemas/lifecycle-evidence-graph.schema.json",
+  "schema_version": "1.0.0",
+  "status": "proposed",
+  "required_node_types": [
+    "product-problem",
+    "decision",
+    "work-package",
+    "change-set",
+    "verification",
+    "review",
+    "acceptance",
+    "release",
+    "deployment",
+    "telemetry",
+    "incident",
+    "learning"
+  ],
+  "required_forward_chain": [
+    "product-problem->decision",
+    "decision->work-package",
+    "work-package->change-set",
+    "change-set->verification",
+    "verification->review",
+    "review->acceptance"
+  ],
+  "conditional_edges": [
+    "acceptance->release",
+    "release->deployment",
+    "deployment->telemetry",
+    "telemetry->incident",
+    "incident->learning",
+    "telemetry->learning"
+  ],
+  "node_requirements": [
+    "id",
+    "type",
+    "owner",
+    "status",
+    "timestamp",
+    "evidence_ref",
+    "integrity_digest"
+  ],
+  "rules": {
+    "no-orphan-release": true,
+    "no-orphan-deployment": true,
+    "no-orphan-incident": true,
+    "git-reference-optional": true,
+    "canonical-record-required": true
+  },
+  "nodes": [],
+  "edges": []
+}
