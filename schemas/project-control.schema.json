@@ -3,56 +3,12 @@
   "$id": "https://github.com/nulleimy/ENGINEERING-WORKFLOW/schemas/project-control.schema.json",
   "title": "ENGINEERING-WORKFLOW project control",
   "type": "object",
-  "required": [
-    "schema_version",
-    "project",
-    "control",
-    "quality"
-  ],
+  "required": ["schema_version", "project", "control", "quality"],
   "properties": {
-    "schema_version": {
-      "const": 1
-    },
+    "schema_version": {"const": 1},
     "project": {
       "type": "object",
-      "required": [
-        "id",
-        "name",
-        "status",
-        "product_owner",
-        "technical_owner"
-      ],
-      "properties": {
-        "id": {
-          "type": "string",
-          "minLength": 1
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1
-        },
-        "status": {
-          "enum": [
-            "concept",
-            "discovery",
-            "defined",
-            "building",
-            "validating",
-            "operating",
-            "maintenance",
-            "retired",
-            "archived"
-          ]
-        },
-        "product_owner": {
-          "type": "string",
-          "minLength": 1
-        },
-        "technical_owner": {
-          "type": "string",
-          "minLength": 1
-        }
-      },
+      "required": ["id", "name", "status", "product_owner", "technical_owner"],
       "additionalProperties": true
     },
     "control": {
@@ -66,73 +22,18 @@
         "technical_operating_mode",
         "product_decision_execution_constitution",
         "constitutional_authority",
-        "constitutional_compatibility_report"
+        "constitutional_compatibility_report",
+        "primary_engineering_invariant",
+        "complexity_budget",
+        "reversibility_classes",
+        "manual_work_register",
+        "lifecycle_evidence_graph"
       ],
-      "properties": {
-        "version": {
-          "type": "string",
-          "minLength": 1
-        },
-        "canonical_repository": {
-          "type": "string",
-          "minLength": 1
-        },
-        "default_branch": {
-          "type": "string",
-          "minLength": 1
-        },
-        "normative_language": {
-          "type": "string",
-          "minLength": 1
-        },
-        "governance_file": {
-          "type": "string",
-          "minLength": 1
-        },
-        "technical_operating_mode": {
-          "type": "string",
-          "minLength": 1
-        },
-        "product_decision_execution_constitution": {
-          "type": "string",
-          "minLength": 1
-        },
-        "constitutional_authority": {
-          "type": "string",
-          "minLength": 1
-        },
-        "constitutional_compatibility_report": {
-          "type": "string",
-          "minLength": 1
-        }
-      },
       "additionalProperties": true
     },
     "quality": {
       "type": "object",
-      "required": [
-        "validator",
-        "constitutional_validator",
-        "tests",
-        "release_requires_clean_validation"
-      ],
-      "properties": {
-        "validator": {
-          "type": "string",
-          "minLength": 1
-        },
-        "constitutional_validator": {
-          "type": "string",
-          "minLength": 1
-        },
-        "tests": {
-          "type": "string",
-          "minLength": 1
-        },
-        "release_requires_clean_validation": {
-          "type": "boolean"
-        }
-      },
+      "required": ["validator", "constitutional_validator", "primary_invariant_validator", "tests", "release_requires_clean_validation"],
       "additionalProperties": true
     }
   },
