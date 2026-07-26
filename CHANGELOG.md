@@ -3,7 +3,7 @@ id: EW-CHANGELOG
 title: Changelog
 status: current
 owner: Eimy Herrer and Johny
-version: 0.9.2-rc.1
+version: 0.9.3-rc.1
 last-reviewed: 2026-07-26
 ---
 
@@ -15,6 +15,12 @@ All notable changes are recorded here. Versions follow Semantic Versioning.
 
 ### Added
 
+- proprietary `LICENSE` and `COPYRIGHT` notices reserving project rights to Eimy Herrer;
+- machine-readable IP provenance register and schema;
+- exclusive-rights and proprietary-licensing governance policy;
+- closed-by-default contribution policy requiring a project-specific written exclusive rights agreement;
+- fail-closed distribution gates while contributor and AI provenance remain unresolved;
+- licensing validator with negative regression tests;
 - deterministic reference artifact packaging and SHA-256 manifests;
 - CycloneDX SBOM generation and blocking vulnerability policy;
 - supply-chain evidence, provenance, keyless signing and identity-verification workflow;
@@ -41,11 +47,14 @@ All notable changes are recorded here. Versions follow Semantic Versioning.
 
 ### Planned
 
+- legal identity verification for the exclusive rights holder;
+- file-level contributor and AI authorship provenance audit;
+- written exclusive rights resolution for any non-Eimy copyrightable contribution;
+- repository visibility change to private as a separate protected action;
 - repository rulesets and branch protection;
 - semantic project migration and upgrade automation;
 - language and deployment golden paths;
 - reusable deployment adapters;
-- compliance evidence generation;
 - successful signed main/tag evidence execution;
 - real new-project and existing-project pilots.
 

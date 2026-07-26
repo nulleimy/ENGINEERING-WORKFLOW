@@ -5,11 +5,11 @@
     "id": "engineering-workflow",
     "name": "ENGINEERING-WORKFLOW",
     "status": "validating",
-    "product_owner": "Eimy Herrer and Johny",
+    "product_owner": "Eimy Herrer",
     "technical_owner": "Eimy Herrer and Johny"
   },
   "control": {
-    "version": "0.9.2-rc.1",
+    "version": "0.9.3-rc.1",
     "canonical_repository": "https://github.com/nulleimy/ENGINEERING-WORKFLOW",
     "default_branch": "main",
     "normative_language": "en-with-canonical-czech-constitutions",
@@ -23,6 +23,18 @@
     "reversibility_classes": "config/reversibility-classes.json",
     "manual_work_register": "evidence/manual-work-register.json",
     "lifecycle_evidence_graph": "evidence/lifecycle-evidence-graph.json"
+  },
+  "licensing": {
+    "model": "proprietary-all-rights-reserved",
+    "intended_exclusive_rights_holder": "Eimy Herrer",
+    "release_authority": "Eimy Herrer",
+    "open_source_project_license_granted": false,
+    "license_notice": "LICENSE",
+    "copyright_notice": "COPYRIGHT",
+    "provenance_register": "governance/IP_PROVENANCE_REGISTER.json",
+    "policy": "governance/EXCLUSIVE_RIGHTS_AND_LICENSING_POLICY.md",
+    "exclusive_control_status": "BLOCKED_PENDING_CONTRIBUTOR_AND_AI_PROVENANCE_AUDIT",
+    "distribution_requires_verified_exclusive_control": true
   },
   "cli": {
     "version": "0.3.0",
@@ -44,6 +56,7 @@
     "constitutional_validator": "python3 scripts/validate_constitutions.py",
     "primary_invariant_validator": "python3 scripts/validate_primary_invariant.py",
     "supply_chain_validator": "python3 scripts/validate_supply_chain.py",
+    "licensing_validator": "python3 scripts/validate_licensing.py",
     "cli_self_test": "./bin/ew self-test --json",
     "tests": "python3 -m unittest discover -s tests -v",
     "release_requires_clean_validation": true,

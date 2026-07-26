@@ -135,6 +135,13 @@
     "bin/ew_records.py",
     "bin/ew_doctor.py",
     "bin/ew_ops.py",
-    "bin/ew_cli.py"
+    "bin/ew_cli.py",
+    "LICENSE",
+    "COPYRIGHT",
+    "governance/EXCLUSIVE_RIGHTS_AND_LICENSING_POLICY.md",
+    "governance/IP_PROVENANCE_REGISTER.json",
+    "schemas/ip-provenance-register.schema.json",
+    "scripts/validate_licensing.py",
+    "tests/test_licensing.py"
   ]
 }
