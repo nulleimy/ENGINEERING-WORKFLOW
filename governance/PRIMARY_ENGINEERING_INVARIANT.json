@@ -1,0 +1,30 @@
+{
+  "$schema": "../schemas/primary-engineering-invariant.schema.json",
+  "schema_version": "1.0.0",
+  "status": "proposed",
+  "id": "EW-GOV-PRIMARY-001",
+  "constitution_path": "governance/PRODUCT_DECISION_EXECUTION_CONSTITUTION.md",
+  "constitution_sha256": "be1f411de132280c2588328cffd76ee76053e4382b36b48d7c5ca7edd5deb719",
+  "statement": "Product cleanliness, Unix simplicity, DevOps automation, SRE reliability, zero-trust security and lifecycle-wide auditability are one indivisible engineering invariant.",
+  "required_properties": [
+    {"id": "simple", "requirement": "MUST", "evidence": "complexity-assessment", "exception_allowed": true},
+    {"id": "purposeful", "requirement": "MUST", "evidence": "product-or-technical-outcome", "exception_allowed": false},
+    {"id": "automated", "requirement": "MUST", "evidence": "automation-result-or-expiring-manual-work-record", "exception_allowed": true},
+    {"id": "secure", "requirement": "MUST", "evidence": "security-impact-and-controls", "exception_allowed": false},
+    {"id": "measurable", "requirement": "MUST", "evidence": "acceptance-and-metric-record", "exception_allowed": false},
+    {"id": "reversible", "requirement": "MUST", "evidence": "reversibility-class-and-recovery-proof", "exception_allowed": true},
+    {"id": "evidence-verifiable", "requirement": "MUST", "evidence": "lifecycle-evidence-graph", "exception_allowed": false}
+  ],
+  "non_exceptable_boundaries": [
+    "truthful-status",
+    "evidence-integrity",
+    "secret-protection",
+    "explicit-protected-operation-authorization"
+  ],
+  "supporting_controls": {
+    "complexity_budget": "config/complexity-budget.json",
+    "reversibility_classes": "config/reversibility-classes.json",
+    "manual_work_register": "evidence/manual-work-register.json",
+    "lifecycle_evidence_graph": "evidence/lifecycle-evidence-graph.json"
+  }
+}
