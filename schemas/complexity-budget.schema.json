@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Complexity budget",
+  "type": "object",
+  "required": ["schema_version", "status", "dimensions", "exceeding_requires", "automatic_escalation", "evaluation_result_states"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "status": {"enum": ["proposed", "accepted"]},
+    "dimensions": {"type": "array", "minItems": 7},
+    "exceeding_requires": {"type": "array", "minItems": 6, "uniqueItems": true},
+    "automatic_escalation": {"type": "array", "minItems": 4, "uniqueItems": true},
+    "evaluation_result_states": {"type": "array", "minItems": 3, "uniqueItems": true}
+  },
+  "additionalProperties": true
+}
